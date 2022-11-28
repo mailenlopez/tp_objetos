@@ -29,6 +29,8 @@ public class Application {
     }
 
     private static int CrearMaquina(Casino casino, Scanner scanner) {
+        System.out.print("Hola crayola!\n");
+
         System.out.print("--- Creando nueva máquina --- \n");
         System.out.print("Número de casillas: 3 \n");
 
