@@ -5,27 +5,33 @@ import java.util.Collection;
 import java.util.Scanner;
 
 import controller.Casino;
+import gui.VentanaPrincipal;
 import modelo.Maquina;
 import modelo.Premio;
-import modelo.Ticket;
 
 public class Application {
 
     private static String[] listadoFrutas = { "Banana", "Frutilla", "Guinda", "Manzana", "Sandia", "Uva" };
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        Casino casino = Casino.getInstance();
 
-        int nroMaquina = CrearMaquina(casino, scanner);
-        MockedPremio(casino);
-        BajaPremio(casino, scanner);
-        CrearPremios(casino, scanner);
-        Ticket ticket = casino.GenerarTicket(200);
-        casino.CargarCreditoMaquina(nroMaquina, ticket.getNroTicket());
-        casino.Jugar(nroMaquina);
+        VentanaPrincipal ventana = new VentanaPrincipal();
+        ventana.setVisible(true);
 
-        scanner.close();
+        /*
+         * Scanner scanner = new Scanner(System.in);
+         * Casino casino = Casino.getInstance();
+         * 
+         * int nroMaquina = CrearMaquina(casino, scanner);
+         * MockedPremio(casino);
+         * BajaPremio(casino, scanner);
+         * CrearPremios(casino, scanner);
+         * Ticket ticket = casino.GenerarTicket(200);
+         * casino.CargarCreditoMaquina(nroMaquina, ticket.getNroTicket());
+         * casino.Jugar(nroMaquina);
+         * 
+         * scanner.close();
+         */
     }
 
     private static int CrearMaquina(Casino casino, Scanner scanner) {
