@@ -57,7 +57,7 @@ public class Casino {
 		}
 	}
 
-	private Maquina BuscarMaquina(int nroMaquina) {
+	public Maquina BuscarMaquina(int nroMaquina) {
 		for (Maquina m : maquinas) {
 			if (m.SoyEsaMaquina(nroMaquina)) {
 				return m;

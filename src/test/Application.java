@@ -15,7 +15,8 @@ public class Application {
 
     public static void main(String[] args) {
 
-        VentanaPrincipal ventana = new VentanaPrincipal();
+        Casino casino = Casino.getInstance();
+        VentanaPrincipal ventana = new VentanaPrincipal(casino);
         ventana.setVisible(true);
 
         /*

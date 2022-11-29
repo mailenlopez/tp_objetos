@@ -4,16 +4,27 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+
+import controller.Casino;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Driver;
 
 public class VentanaPrincipal extends JFrame implements ActionListener {
 
     private Container contenedor;
+    private Casino casino;
 
-    public VentanaPrincipal() {
+    /**
+     * @return Casino instance
+     */
+    public Casino getCasino() {
+        return casino;
+    }
+
+    public VentanaPrincipal(Casino _casino) {
+        casino = _casino;
         IniciarlizarVentanaPrincipal();
         InicializarComponentes();
     }

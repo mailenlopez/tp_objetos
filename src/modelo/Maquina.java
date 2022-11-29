@@ -9,6 +9,11 @@ import java.util.Date;
 
 public class Maquina {
 	private int nroMaquina;
+
+	public void setNroMaquina(int nroMaquina) {
+		this.nroMaquina = nroMaquina;
+	}
+
 	private int nroCasillas;
 	private float recaudacion;
 	private float recaudacionMin;
@@ -25,6 +30,22 @@ public class Maquina {
 
 	public int getNroCasillas() {
 		return nroCasillas;
+	}
+
+	public float getRecaudacion() {
+		return recaudacion;
+	}
+
+	public float getRecaudacionMin() {
+		return recaudacionMin;
+	}
+
+	public float getCostoJugada() {
+		return costoJugada;
+	}
+
+	public float getCreditoDisponible() {
+		return creditoDisponible;
 	}
 
 	public Collection<Premio> getPremiosDisponibles() {

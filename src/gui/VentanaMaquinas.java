@@ -5,6 +5,8 @@ import javax.swing.JFrame;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -12,9 +14,15 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.JTableHeader;
+import javax.swing.table.*;
+
+import modelo.Maquina;
 
 import java.awt.event.WindowEvent;
+import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Vector;
 import java.awt.event.WindowAdapter;
 
 public class VentanaMaquinas extends JFrame implements ActionListener {
@@ -87,10 +95,10 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
 
         String obj = e.getActionCommand();
         switch (obj) {
-            case "Maquinas":
-                System.out.print("Entró a maquinas");
+            case "Crear Maquina":
+                MostrarCrearMaquina(0);
                 break;
-            case "Tickets":
+            case "btnTickets":
                 System.out.print("Entró a tickets");
                 break;
         }
@@ -102,26 +110,66 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
                 "Casillas",
                 "Recaudación",
                 "Recaudación Min",
-                "Costo" };
-
-        Object[][] data = {
-                { 1, "3", "$1,200", "$500", "$10" },
-                { 2, "3", "$1,900", "$500", "$5" },
-                { 3, "3", "$1,000", "$500", "$20" },
-                { 4, "3", "$1,250", "$500", "$7" },
-                { 5, "3", "$900", "$400", "$3" }
+                "Costo"
         };
+
+        Collection<Maquina> maquinas = ventanaPrincipal.getCasino().getMaquinas();
+        ArrayList<Maquina> arrayMaquinas = new ArrayList<>(maquinas);
+
+        Object[][] data = new Object[maquinas.size()][columnNames.length];
+
+        for (int i = 0; i < arrayMaquinas.size(); i++) {
+            Maquina maquina = arrayMaquinas.get(i);
+
+            data[i][0] = maquina.getNroMaquina();
+            data[i][1] = maquina.getNroCasillas();
+            data[i][2] = "$" + String.valueOf(maquina.getRecaudacion());
+            data[i][3] = "$" + String.valueOf(maquina.getRecaudacionMin());
+            data[i][4] = "$" + String.valueOf(maquina.getCostoJugada());
+        }
 
         JTable table = new JTable(data, columnNames);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        table.setDefaultRenderer(String.class, centerRenderer);
 
-        table.setRowSelectionAllowed(true);
+        for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
+            table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+
+        table.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent me) {
+                if (me.getClickCount() == 2) {
+                    Object objeto = table.getValueAt(table.getSelectedRow(), 0);
+                    // TODO: Agregar la busqueda de la maquina por su Id
+                    System.out.println(objeto);
+                    MostrarCrearMaquina((int) objeto);
+                }
+            }
+        });
+
         JScrollPane scrollPane = new JScrollPane(table);
         table.setFillsViewportHeight(true);
+        table.setDefaultEditor(Object.class, null);
 
         scrollPane.setBounds(185, 105, 500, 200);
         container.add(scrollPane);
+    }
+
+    private void MostrarCrearMaquina(int numeroMaquina) {
+
+        Maquina maquina = null;
+        CrearMaquina crearMaquina;
+
+        if (numeroMaquina > 0) {
+            maquina = ventanaPrincipal.getCasino().BuscarMaquina(numeroMaquina);
+        }
+
+        if (maquina != null) {
+            crearMaquina = new CrearMaquina(ventanaPrincipal, maquina);
+        } else {
+            crearMaquina = new CrearMaquina(ventanaPrincipal);
+        }
+
+        crearMaquina.setVisible(true);
     }
 }
