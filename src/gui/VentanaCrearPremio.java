@@ -22,15 +22,16 @@ import modelo.Premio;
 public class VentanaCrearPremio extends JDialog implements ActionListener {
     private Maquina maquina;
     private JLabel lblDinero;
-    private JTextField txtFruta1, txtFruta2, txtFruta3, txtDinero;
+    private JTextField txtDinero;
     private JPanel jpMainPanel;
     private JComboBox[] comboPremios;
     private Container contenedor;
+    private VentanaMaquinas ventanaMaquinas;
 
-    public VentanaCrearPremio(VentanaPremios _ventanaPremios, Maquina _maquina) {
+    public VentanaCrearPremio(VentanaPremios _ventanaPremios, VentanaMaquinas _ventanaMaquinas, Maquina _maquina) {
         super(_ventanaPremios, true);
         maquina = _maquina;
-
+        ventanaMaquinas = _ventanaMaquinas;
         InicializarVentana();
         InicializarComponentes();
     }
@@ -57,65 +58,90 @@ public class VentanaCrearPremio extends JDialog implements ActionListener {
         }
 
         lblDinero = new JLabel("Dinero: ");
+        lblDinero.setBounds(200, 20, 100, 25);
         txtDinero = new JTextField();
+        txtDinero.setBounds(200, 50, 100, 25);
         PlainDocument docDinero = (PlainDocument) txtDinero.getDocument();
         docDinero.setDocumentFilter(new IntFilter());
 
         JButton btnAceptar = new JButton("Aceptar");
+        btnAceptar.setName("btnAceptar");
+        btnAceptar.setBounds(30, 250, 100, 25);
         btnAceptar.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 GuardarPremio();
             }
 
         });
 
         JButton btnCancelar = new JButton("Cancelar");
+        btnAceptar.setName("btnCancelar");
+        btnCancelar.setBounds(80, 250, 100, 25);
         btnCancelar.addActionListener(this);
 
-        JPanel jpForm = new JPanel();
-        jpForm.setLayout(new GridLayout(5, 2, 20, 20));
-
-        jpForm.add(lblDinero);
-        jpForm.add(txtDinero);
-        jpForm.add(btnAceptar);
-        jpForm.add(btnCancelar);
-
-        jpMainPanel = new JPanel();
-        jpMainPanel.setLayout(new BorderLayout());
-        jpMainPanel.add(jpForm, BorderLayout.NORTH);
-        jpMainPanel.setBorder(BorderFactory.createEmptyBorder(30, 10, 10, 10));
-
-        add(jpMainPanel);
+        contenedor.add(lblDinero);
+        contenedor.add(txtDinero);
+        contenedor.add(btnAceptar);
+        contenedor.add(btnCancelar);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
+        JButton btnClicked = (JButton) e.getSource();
 
+        switch (btnClicked.getName()) {
+            case "btnAceptar":
+                GuardarPremio();
+                break;
+            case "btnCancelar":
+                Volver();
+                break;
+        }
     }
 
     private void GuardarPremio() {
-
-        Premio premio = maquina.CargarPremio(
-                new String[] { txtFruta1.getText(), txtFruta2.getText(), txtFruta3.getText() },
-                Float.valueOf(txtDinero.getText()));
-
-        if (premio != null) {
-            JOptionPane.showMessageDialog(jpMainPanel, "El premio ha sido creado.");
-            LimpiarInputs();
-        } else {
-            JOptionPane.showMessageDialog(jpMainPanel, "El premio no ha podido ser creado.");
+        int nroCasillas = maquina.getNroCasillas();
+        String[] combinacion = new String[nroCasillas];
+        for (int i = 0; i < nroCasillas; i++) {
+            combinacion[i] = comboPremios[i].getItemAt(comboPremios[i].getSelectedIndex()).toString();
         }
 
+        Premio premioExistente = maquina.BuscarPremioPorCombinacion(combinacion);
+
+        if (premioExistente != null) {
+            JOptionPane.showMessageDialog(contenedor,
+                    "La combinación elegida ya cuenta con un premio en esta máquina.");
+        } else {
+            maquina.CargarPremio(combinacion, Integer.valueOf(txtDinero.getText()));
+            Volver();
+        }
     }
 
-    private void LimpiarInputs() {
-        txtFruta1.setText("");
-        txtFruta2.setText("");
-        txtFruta3.setText("");
-        txtDinero.setText("");
+    private void Volver() {
+        // dispose();
+        // VentanaPremios ventanaPremios = new VentanaPremios(ventanaMaquinas, maquina);
+        // ventanaPremios.setVisible(true);
     }
+
+    /*
+     * private void GuardarPremio() {
+     * 
+     * Premio premio = maquina.CargarPremio(
+     * new String[] { txtFruta1.getText(), txtFruta2.getText(), txtFruta3.getText()
+     * },
+     * Float.valueOf(txtDinero.getText()));
+     * 
+     * if (premio != null) {
+     * JOptionPane.showMessageDialog(jpMainPanel, "El premio ha sido creado.");
+     * LimpiarInputs();
+     * } else {
+     * JOptionPane.showMessageDialog(jpMainPanel,
+     * "El premio no ha podido ser creado.");
+     * }
+     * 
+     * }
+     */
+
 }

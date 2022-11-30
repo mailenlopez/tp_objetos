@@ -119,6 +119,7 @@ public class VentanaTickets extends JFrame implements ActionListener {
     }
 
     private void MostrarCrearTicket() {
+        dispose();
         VentanaCrearTicket crearTicket = new VentanaCrearTicket(ventanaPrincipal);
         crearTicket.setVisible(true);
     }

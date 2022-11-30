@@ -118,9 +118,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     }
 
     public void MostrarVentanaTickets() {
-        VentanaTickets ventanaMaquinas = new VentanaTickets(this);
+        VentanaTickets ventanaTickets = new VentanaTickets(this);
         this.setDefaultCloseOperation(HIDE_ON_CLOSE);
-        ventanaMaquinas.setVisible(true);
+        ventanaTickets.setVisible(true);
         this.setVisible(false);
     }
 

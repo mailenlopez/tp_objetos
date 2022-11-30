@@ -18,14 +18,16 @@ import controller.Casino;
 import filter.IntFilter;
 import modelo.Ticket;
 
-public class VentanaCrearTicket extends JDialog implements ActionListener {
+public class VentanaCrearTicket extends JDialog {
     private Casino casino;
     private JLabel lblNumeroTicket, lblImporte;
     private JTextField txtImporte;
     private JPanel jpMainPanel;
+    private VentanaPrincipal ventanaPrincipal;
 
     public VentanaCrearTicket(VentanaPrincipal _ventanaPrincipal) {
         super(_ventanaPrincipal, true);
+        ventanaPrincipal = _ventanaPrincipal;
         casino = _ventanaPrincipal.getCasino();
         IniciarlizarVentana();
         InicializarComponentes();
@@ -52,14 +54,13 @@ public class VentanaCrearTicket extends JDialog implements ActionListener {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 GuardarTicket();
             }
 
         });
 
-        JButton btnCancelar = new JButton("Cancelar");
-        btnCancelar.addActionListener(this);
+        // JButton btnCancelar = new JButton("Cancelar");
+        // btnCancelar.addActionListener(this);
 
         JPanel jpForm = new JPanel();
         jpForm.setLayout(new GridLayout(5, 2, 20, 20));
@@ -77,12 +78,6 @@ public class VentanaCrearTicket extends JDialog implements ActionListener {
         add(jpMainPanel);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
-
-    }
-
     private void GuardarTicket() {
 
         Ticket ticket = casino.GenerarTicket(Float.valueOf(txtImporte.getText()));
@@ -90,6 +85,7 @@ public class VentanaCrearTicket extends JDialog implements ActionListener {
         if (ticket != null) {
             JOptionPane.showMessageDialog(jpMainPanel, "El ticket ha sido creado.");
             LimpiarInputs();
+            Volver();
         } else {
             JOptionPane.showMessageDialog(jpMainPanel, "El ticket no pudo ser creado.");
         }
@@ -98,5 +94,11 @@ public class VentanaCrearTicket extends JDialog implements ActionListener {
 
     private void LimpiarInputs() {
         txtImporte.setText("");
+    }
+
+    private void Volver() {
+        dispose();
+        VentanaTickets crearTicket = new VentanaTickets(ventanaPrincipal);
+        crearTicket.setVisible(true);
     }
 }

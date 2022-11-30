@@ -150,7 +150,7 @@ public class VentanaPremios extends JFrame implements ActionListener {
     }
 
     private void MostrarCrearPremio() {
-        VentanaCrearPremio crearPremio = new VentanaCrearPremio(this, maquina);
+        VentanaCrearPremio crearPremio = new VentanaCrearPremio(this, ventanaMaquinas, maquina);
         crearPremio.setVisible(true);
     }
 

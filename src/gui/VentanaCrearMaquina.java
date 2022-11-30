@@ -20,6 +20,7 @@ import modelo.Maquina;
 
 public class VentanaCrearMaquina extends JDialog implements ActionListener {
     private Maquina maquina;
+    private VentanaPrincipal ventanaPrincipal;
     private Casino casino;
     private JLabel lblNumeroCasillas, lblRecaudacion, lblRecaudacionMin, lblPrecioJugada;
     private JTextField txtNumeroCasillas, txtRecaudacion, txtRecaudacionMin, txtPrecioJugada;
@@ -27,6 +28,7 @@ public class VentanaCrearMaquina extends JDialog implements ActionListener {
 
     public VentanaCrearMaquina(VentanaPrincipal _ventanaPrincipal) {
         super(_ventanaPrincipal, true);
+        ventanaPrincipal = _ventanaPrincipal;
         casino = _ventanaPrincipal.getCasino();
         IniciarlizarVentana();
         InicializarComponentes();
@@ -136,6 +138,13 @@ public class VentanaCrearMaquina extends JDialog implements ActionListener {
             JOptionPane.showMessageDialog(jpMainPanel, "La maquina no pudo ser almacenada.");
         }
 
+        Volver();
+    }
+
+    private void Volver() {
+        dispose();
+        VentanaMaquinas ventanaMaquinas = new VentanaMaquinas(ventanaPrincipal);
+        ventanaMaquinas.setVisible(true);
     }
 
     private void LimpiarInputs() {

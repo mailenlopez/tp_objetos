@@ -47,15 +47,16 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
         setSize(800, 600);
         setLocationRelativeTo(null);
         setIconImage(new ImageIcon(getClass().getResource("icon.png")).getImage());
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         addWindowListener(new WindowAdapter() {
+
             @Override
             public void windowClosing(WindowEvent windowEvent) {
                 ventanaPrincipal.setVisible(true);
                 ventanaPrincipal.setDefaultCloseOperation(EXIT_ON_CLOSE);
             }
         });
+
     }
 
     private void InicializarComponentes() {
@@ -194,7 +195,7 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
     }
 
     private void MostrarCrearMaquina(int numeroMaquina) {
-
+        dispose();
         Maquina maquina = null;
         VentanaCrearMaquina crearMaquina;
 
@@ -227,9 +228,9 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
     }
 
     private void MostrarPremios() {
+        dispose();
         VentanaPremios ventanaMaquinas = new VentanaPremios(this, maquina);
-        this.setDefaultCloseOperation(HIDE_ON_CLOSE);
         ventanaMaquinas.setVisible(true);
-        this.setVisible(false);
     }
+
 }
