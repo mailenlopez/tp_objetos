@@ -43,6 +43,20 @@ public class Casino {
 		return maquina;
 	}
 
+	public Maquina ModificarMaquina(int nroMaquina, int nroCasillas, float recaudacion, float recaudacionMin,
+			float costoJugada) {
+		// Maquina maquina = BuscarMaquina(nroMaquina);
+		Maquina maquina = maquinas.stream()
+				.filter(s -> s.getNroMaquina() == nroMaquina)
+				.findFirst().orElse(null);
+
+		if (maquina != null) {
+			maquina.ModificarMaquina(nroCasillas, recaudacion, recaudacionMin, costoJugada);
+		}
+
+		return maquina;
+	}
+
 	public void AltaPremio(int nroMaquina, String[] combinacion, float dinero) {
 		Maquina maquina = BuscarMaquina(nroMaquina);
 		if (maquina != null) {
@@ -139,14 +153,11 @@ public class Casino {
 		}
 
 		Jugada jugada = maquina.GenerarJugada();
-		// float premio = maquina.CalcularPremio();
+		float premio = maquina.CalcularPremio();
 
-		// System.out.print("Jugada obtenida: " +
-		// Arrays.toString(jugada.getCombinacion()));
-
-		// if (premio > 0) {
-		// System.out.print("Premio obtenido!: Ha ganado $" + premio);
-		// }
+		if (premio > 0) {
+			JOptionPane.showMessageDialog(null, "Premio obtenido!: Ha ganado $" + premio);
+		}
 
 		return jugada;
 	}

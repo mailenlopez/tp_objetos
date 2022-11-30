@@ -124,15 +124,27 @@ public class VentanaCrearMaquina extends JDialog implements ActionListener {
                 Volver();
                 break;
         }
-
     }
 
     private void GuardarMaquina() {
-        Maquina maquina = casino.CrearMaquina(
-                Integer.valueOf(txtNumeroCasillas.getText()),
-                Float.valueOf(txtRecaudacion.getText()),
-                Float.valueOf(txtRecaudacionMin.getText()),
-                Float.valueOf(txtPrecioJugada.getText()));
+        Integer nroCasillas = Integer.valueOf(txtNumeroCasillas.getText());
+        Float recaudacion = Float.valueOf(txtRecaudacion.getText());
+        Float recaudacionMin = Float.valueOf(txtRecaudacionMin.getText());
+        Float precioJugada = Float.valueOf(txtPrecioJugada.getText());
+
+        if (maquina != null) {
+            casino.ModificarMaquina(maquina.getNroMaquina(),
+                    nroCasillas,
+                    recaudacion,
+                    recaudacionMin,
+                    precioJugada);
+        } else {
+            maquina = casino.CrearMaquina(
+                    nroCasillas,
+                    recaudacion,
+                    recaudacionMin,
+                    precioJugada);
+        }
 
         if (maquina != null) {
             JOptionPane.showMessageDialog(jpMainPanel, "La maquina ha sido guardada.");

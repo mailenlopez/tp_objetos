@@ -83,7 +83,7 @@ public class Maquina {
 		for (Premio p : premiosDisponibles) {
 			if (p.SoyEstaCombinacion(jugada.getCombinacion())) {
 				float dineroPremio = p.getDinero();
-				if (dineroPremio >= recaudacion) {
+				if (recaudacion >= dineroPremio) {
 					ReducirRecaudacion(dineroPremio);
 					CargarCreditoDisponible(dineroPremio);
 
@@ -107,10 +107,10 @@ public class Maquina {
 		return jugada;
 	}
 
-	public void DarBajaPremio(int premioId) {
+	public void DarBajaPremio(int nroPremio) {
 		boolean existePremio = false;
 
-		Premio premio = BuscarPremioPorId(premioId);
+		Premio premio = BuscarPremioPorId(nroPremio);
 		if (premio != null) {
 			premiosDisponibles.remove(premio);
 		} else {
@@ -189,5 +189,12 @@ public class Maquina {
 		}
 
 		return null;
+	}
+
+	public void ModificarMaquina(int nroCasillas, float recaudacion, float recaudacionMin, float costoJugada) {
+		this.nroCasillas = nroCasillas;
+		this.recaudacion = recaudacion;
+		this.recaudacionMin = recaudacionMin;
+		this.costoJugada = costoJugada;
 	}
 }

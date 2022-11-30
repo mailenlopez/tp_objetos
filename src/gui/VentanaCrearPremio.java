@@ -6,12 +6,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.PlainDocument;
 
@@ -23,15 +21,17 @@ public class VentanaCrearPremio extends JDialog implements ActionListener {
     private Maquina maquina;
     private JLabel lblDinero;
     private JTextField txtDinero;
-    private JPanel jpMainPanel;
     private JComboBox[] comboPremios;
     private Container contenedor;
     private VentanaMaquinas ventanaMaquinas;
+    private VentanaPrincipal ventanaPrincipal;
 
-    public VentanaCrearPremio(VentanaPremios _ventanaPremios, VentanaMaquinas _ventanaMaquinas, Maquina _maquina) {
+    public VentanaCrearPremio(VentanaPremios _ventanaPremios, VentanaPrincipal _ventanaPrincipal,
+            VentanaMaquinas _ventanaMaquinas, Maquina _maquina) {
         super(_ventanaPremios, true);
         maquina = _maquina;
         ventanaMaquinas = _ventanaMaquinas;
+        ventanaPrincipal = _ventanaPrincipal;
         InicializarVentana();
         InicializarComponentes();
     }
@@ -67,18 +67,11 @@ public class VentanaCrearPremio extends JDialog implements ActionListener {
         JButton btnAceptar = new JButton("Aceptar");
         btnAceptar.setName("btnAceptar");
         btnAceptar.setBounds(30, 250, 100, 25);
-        btnAceptar.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GuardarPremio();
-            }
-
-        });
+        btnAceptar.addActionListener(this);
 
         JButton btnCancelar = new JButton("Cancelar");
-        btnAceptar.setName("btnCancelar");
-        btnCancelar.setBounds(80, 250, 100, 25);
+        btnCancelar.setName("btnCancelar");
+        btnCancelar.setBounds(150, 250, 100, 25);
         btnCancelar.addActionListener(this);
 
         contenedor.add(lblDinero);
@@ -120,28 +113,9 @@ public class VentanaCrearPremio extends JDialog implements ActionListener {
     }
 
     private void Volver() {
-        // dispose();
-        // VentanaPremios ventanaPremios = new VentanaPremios(ventanaMaquinas, maquina);
-        // ventanaPremios.setVisible(true);
+        dispose();
+        VentanaPremios ventanaPremios = new VentanaPremios(ventanaMaquinas, ventanaPrincipal, maquina);
+        ventanaPremios.setVisible(true);
     }
-
-    /*
-     * private void GuardarPremio() {
-     * 
-     * Premio premio = maquina.CargarPremio(
-     * new String[] { txtFruta1.getText(), txtFruta2.getText(), txtFruta3.getText()
-     * },
-     * Float.valueOf(txtDinero.getText()));
-     * 
-     * if (premio != null) {
-     * JOptionPane.showMessageDialog(jpMainPanel, "El premio ha sido creado.");
-     * LimpiarInputs();
-     * } else {
-     * JOptionPane.showMessageDialog(jpMainPanel,
-     * "El premio no ha podido ser creado.");
-     * }
-     * 
-     * }
-     */
 
 }

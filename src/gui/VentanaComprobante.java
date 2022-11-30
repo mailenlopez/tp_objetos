@@ -21,8 +21,8 @@ public class VentanaComprobante extends JDialog implements ActionListener {
     private JPanel jpMainPanel;
     private Casino casino;
 
-    public VentanaComprobante(VentanaMaquinas _ventanaMaquinas, Casino _casino, Maquina _maquina) {
-        super(_ventanaMaquinas, true);
+    public VentanaComprobante(VentanaJugada _ventanaJugada, Casino _casino, Maquina _maquina) {
+        super(_ventanaJugada, true);
         casino = _casino;
         maquina = _maquina;
 

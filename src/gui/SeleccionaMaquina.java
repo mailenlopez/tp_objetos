@@ -62,7 +62,7 @@ public class SeleccionaMaquina extends JDialog {
 
                 Maquina maquina = casino.BuscarMaquina(Integer
                         .valueOf(comboMaquinas.getItemAt(comboMaquinas.getSelectedIndex()).toString().substring(8)));
-                VentanaJugada ventana = new VentanaJugada(ventanaPrincipal, casino, maquina);
+                VentanaJugada ventana = new VentanaJugada(ventanaPrincipal, maquina);
                 ventana.setVisible(true);
                 setVisible(false);
             }

@@ -28,11 +28,11 @@ public class VentanaJugada extends JFrame implements ActionListener {
     private JLabel[] lblFrutas;
     private String[] frutas;
 
-    public VentanaJugada(VentanaPrincipal _ventanaPrincipal, Casino _casino, Maquina _maquina) {
+    public VentanaJugada(VentanaPrincipal _ventanaPrincipal, Maquina _maquina) {
         super();
-        casino = _casino;
         maquina = _maquina;
         ventanaPrincipal = _ventanaPrincipal;
+        casino = _ventanaPrincipal.getCasino();
         frutas = maquina.getFrutas();
         IniciarlizarVentana();
         InicializarComponentes();
@@ -70,10 +70,12 @@ public class VentanaJugada extends JFrame implements ActionListener {
         }
 
         lblMaquinaConfig = new JLabel("Maquina " + maquina.getNroMaquina());
-        lblMaquinaConfig.setBounds(10, 5, 100, 20);
+        lblMaquinaConfig.setForeground(Color.WHITE);
+        lblMaquinaConfig.setBounds(350, 5, 100, 20);
 
         lblCreditoDisp = new JLabel("Crédito disponible: $" + maquina.getCreditoDisponible());
-        lblCreditoDisp.setBounds(10, 520, 200, 25);
+        lblCreditoDisp.setForeground(Color.WHITE);
+        lblCreditoDisp.setBounds(310, 500, 200, 25);
 
         JButton btnCargarTicket = new JButton();
         btnCargarTicket.setText("Cargar Ticket");
@@ -81,9 +83,29 @@ public class VentanaJugada extends JFrame implements ActionListener {
         btnCargarTicket.setForeground(Color.WHITE);
         btnCargarTicket.setFocusPainted(false);
         btnCargarTicket.setFont(new Font("Tahoma", Font.BOLD, 12));
-        btnCargarTicket.setBounds(615, 25, 150, 25);
+        btnCargarTicket.setBounds(300, 40, 150, 25);
         btnCargarTicket.setName("btnCargarTicket");
         btnCargarTicket.addActionListener(this);
+
+        JButton btnSalir = new JButton();
+        btnSalir.setText("Salir");
+        btnSalir.setBackground(Color.WHITE);
+        btnSalir.setForeground(Color.BLACK);
+        btnSalir.setFocusPainted(false);
+        btnSalir.setFont(new Font("Tahoma", Font.BOLD, 12));
+        btnSalir.setBounds(500, 40, 100, 25);
+        btnSalir.setName("btnSalir");
+        btnSalir.addActionListener(this);
+
+        JButton btnComprobante = new JButton();
+        btnComprobante.setText("Emitir Comprobante");
+        btnComprobante.setBackground(Color.WHITE);
+        btnComprobante.setForeground(Color.BLACK);
+        btnComprobante.setFocusPainted(false);
+        btnComprobante.setFont(new Font("Tahoma", Font.BOLD, 12));
+        btnComprobante.setBounds(100, 40, 170, 25);
+        btnComprobante.setName("btnComprobante");
+        btnComprobante.addActionListener(this);
 
         JLabel contentPane = new JLabel();
         contentPane.setBounds(0, 0, 800, 600);
@@ -94,20 +116,43 @@ public class VentanaJugada extends JFrame implements ActionListener {
 
         JLabel label = new JLabel();
         label.setIcon(new ImageIcon(getClass().getResource("maquina.png")));
-        label.setBounds(80, 115, 610, 333);
+        label.setBounds(110, 450, 610, 333);
 
         JButton btnJugar = new JButton("Jugar");
-        btnJugar.setBounds(650, 260, 100, 25);
-        btnJugar.addActionListener(new ActionListener() {
+        btnJugar.setName("btnJugar");
+        btnJugar.setBounds(320, 400, 100, 25);
+        btnJugar.addActionListener(this);
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        contenedor.add(lblMaquinaConfig);
+        contenedor.add(lblCreditoDisp);
+        contenedor.add(btnJugar);
+        contenedor.add(btnSalir);
+        contenedor.add(btnCargarTicket);
+        contenedor.add(btnComprobante);
+        contenedor.add(contentPane);
+        contenedor.add(label);
+    }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        JButton obj = (JButton) e.getSource();
+
+        switch (obj.getName()) {
+            case "btnCargarTicket":
+                MostrarCargarTicket();
+                break;
+            case "btnSalir":
+                Volver();
+                break;
+            case "btnComprobante":
+                MostrarComprobante();
+                break;
+            case "btnJugar":
                 if (maquina.getCreditoDisponible() >= maquina.getCostoJugada()) {
                     new SwingWorker<Void, Void>() {
                         @Override
                         protected Void doInBackground() throws Exception {
-                            btnJugar.setEnabled(false);
+                            obj.setEnabled(false);
                             boolean jugada = Jugar();
 
                             if (jugada) {
@@ -123,7 +168,7 @@ public class VentanaJugada extends JFrame implements ActionListener {
                                 get();
                             } catch (Exception ignore) {
                             } finally {
-                                btnJugar.setEnabled(true);
+                                obj.setEnabled(true);
                             }
                         }
 
@@ -131,32 +176,20 @@ public class VentanaJugada extends JFrame implements ActionListener {
                 } else {
                     JOptionPane.showMessageDialog(null, "No hay crédito disponible para la jugada.");
                 }
-            }
-        });
-
-        contenedor.add(contentPane);
-        contenedor.add(label);
-        contenedor.add(lblMaquinaConfig);
-        contenedor.add(lblCreditoDisp);
-        contenedor.add(btnJugar);
-        contenedor.add(btnCargarTicket);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        JButton obj = (JButton) e.getSource();
-
-        switch (obj.getName()) {
-            case "btnCargarTicket":
-                MostrarCargarTicket();
                 break;
         }
 
     }
 
     private void MostrarCargarTicket() {
-        VentanaCargarTicket ventanaMaquinas = new VentanaCargarTicket(this, casino, maquina);
+        VentanaCargarTicket ventanaMaquinas = new VentanaCargarTicket(this, ventanaPrincipal, maquina);
         ventanaMaquinas.setVisible(true);
+    }
+
+    private void MostrarComprobante() {
+        VentanaComprobante ventanaComprobante = new VentanaComprobante(this, casino, maquina);
+        ventanaComprobante.setVisible(true);
+        lblCreditoDisp.setText("Credito :" + maquina.getCreditoDisponible());
     }
 
     private void cambiarFruta(int posicion, String fruta) {
@@ -168,9 +201,8 @@ public class VentanaJugada extends JFrame implements ActionListener {
         int casillas = maquina.getNroCasillas();
         int nroMaquina = maquina.getNroMaquina();
         Maquina maquina = casino.BuscarMaquina(nroMaquina);
-        Jugada jugada = maquina.GenerarJugada();
+        Jugada jugada = casino.Jugar(nroMaquina);
 
-        // boolean resultado = c.ultimaJugada(idMaquina);
         String[] combinacion = jugada.getCombinacion();
         int contador = 0;
         long pausa, finish;
@@ -191,5 +223,11 @@ public class VentanaJugada extends JFrame implements ActionListener {
         lblCreditoDisp.setText("Credito :" + maquina.getCreditoDisponible());
 
         return false;
+    }
+
+    private void Volver() {
+        dispose();
+        VentanaPrincipal ventanaPrincip = new VentanaPrincipal(casino);
+        ventanaPrincip.setVisible(true);
     }
 }

@@ -50,11 +50,23 @@ public class VentanaCrearTicket extends JDialog {
         docImporte.setDocumentFilter(new IntFilter());
 
         JButton btnAceptar = new JButton("Aceptar");
+        btnAceptar.setName("btnAceptar");
         btnAceptar.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 GuardarTicket();
+            }
+
+        });
+
+        JButton btnCancelar = new JButton("Cancelar");
+        btnCancelar.setName("btnCancelar");
+        btnCancelar.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Volver();
             }
 
         });
@@ -69,6 +81,7 @@ public class VentanaCrearTicket extends JDialog {
         jpForm.add(lblImporte);
         jpForm.add(txtImporte);
         jpForm.add(btnAceptar);
+        jpForm.add(btnCancelar);
 
         jpMainPanel = new JPanel();
         jpMainPanel.setLayout(new BorderLayout());

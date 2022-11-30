@@ -22,11 +22,13 @@ public class VentanaCargarTicket extends JDialog implements ActionListener {
     private JLabel lblMaquinaConfig, lblNroTicket;
     private JTextField txtNroTicket;
     private JPanel jpMainPanel;
+    private VentanaPrincipal ventanaPrincipal;
     private Casino casino;
 
-    public VentanaCargarTicket(VentanaJugada _ventanaJugada, Casino _casino, Maquina _maquina) {
+    public VentanaCargarTicket(VentanaJugada _ventanaJugada, VentanaPrincipal _ventanaPrincipal, Maquina _maquina) {
         super(_ventanaJugada, true);
-        casino = _casino;
+        ventanaPrincipal = _ventanaPrincipal;
+        casino = _ventanaPrincipal.getCasino();
         maquina = _maquina;
 
         InicializarVentana();
@@ -50,17 +52,11 @@ public class VentanaCargarTicket extends JDialog implements ActionListener {
         docNroTicket.setDocumentFilter(new IntFilter());
 
         JButton btnAceptar = new JButton("Aceptar");
-        btnAceptar.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                CargarTicket();
-            }
-
-        });
+        btnAceptar.setName("btnAceptar");
+        btnAceptar.addActionListener(this);
 
         JButton btnCancelar = new JButton("Cancelar");
+        btnCancelar.setName("btnCancelar");
         btnCancelar.addActionListener(this);
 
         JPanel jpForm = new JPanel();
@@ -82,8 +78,17 @@ public class VentanaCargarTicket extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
+        JButton btnClicked = (JButton) e.getSource();
 
+        switch (btnClicked.getName()) {
+            case "btnAceptar":
+                CargarTicket();
+                Volver();
+                break;
+            case "btnCancelar":
+                Volver();
+                break;
+        }
     }
 
     private void CargarTicket() {
@@ -91,6 +96,12 @@ public class VentanaCargarTicket extends JDialog implements ActionListener {
                 maquina.getNroMaquina(),
                 Integer.parseInt(txtNroTicket.getText()));
         LimpiarInputs();
+    }
+
+    private void Volver() {
+        dispose();
+        VentanaJugada ventanaJugada = new VentanaJugada(ventanaPrincipal, maquina);
+        ventanaJugada.setVisible(true);
     }
 
     private void LimpiarInputs() {

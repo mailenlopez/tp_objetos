@@ -49,7 +49,6 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
         setIconImage(new ImageIcon(getClass().getResource("icon.png")).getImage());
 
         addWindowListener(new WindowAdapter() {
-
             @Override
             public void windowClosing(WindowEvent windowEvent) {
                 ventanaPrincipal.setVisible(true);
@@ -84,17 +83,6 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
         btnPremios.setName("btnPremios");
         btnPremios.addActionListener(this);
 
-        JButton btnComprobante = new JButton();
-        btnComprobante.setText("Emitir Comprobante");
-        btnComprobante.setEnabled(false);
-        btnComprobante.setBackground(new Color(59, 89, 182));
-        btnComprobante.setForeground(Color.WHITE);
-        btnComprobante.setFocusPainted(false);
-        btnComprobante.setFont(new Font("Tahoma", Font.BOLD, 12));
-        btnComprobante.setBounds(515, 110, 170, 25);
-        btnComprobante.setName("btnComprobante");
-        btnComprobante.addActionListener(this);
-
         JLabel contentPane = new JLabel();
         contentPane.setBounds(0, 0, 800, 600);
         contentPane.setIcon(new ImageIcon(getClass().getResource("background.jpg")));
@@ -122,7 +110,6 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
         contenedor.add(btnCrearMaquina);
         contenedor.add(mensajeLbl);
         contenedor.add(btnPremios);
-        contenedor.add(btnComprobante);
         contenedor.add(contentPane);
 
     }
@@ -138,9 +125,6 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
                 break;
             case "btnPremios":
                 MostrarPremios();
-                break;
-            case "btnComprobante":
-                MostrarComprobante();
                 break;
             case "btnVolver":
                 Volver();
@@ -190,9 +174,6 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
 
                     Component configComp = EncontrarComponentePorNombre("btnPremios");
                     configComp.setEnabled(true);
-
-                    Component comprobanteComp = EncontrarComponentePorNombre("btnComprobante");
-                    comprobanteComp.setEnabled(true);
                 }
 
                 if (me.getClickCount() == 2) {
@@ -239,14 +220,9 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
         return null;
     }
 
-    private void MostrarComprobante() {
-        VentanaComprobante ventanaComprobante = new VentanaComprobante(this, casino, maquina);
-        ventanaComprobante.setVisible(true);
-    }
-
     private void MostrarPremios() {
         dispose();
-        VentanaPremios ventanaMaquinas = new VentanaPremios(this, maquina);
+        VentanaPremios ventanaMaquinas = new VentanaPremios(this, ventanaPrincipal, maquina);
         ventanaMaquinas.setVisible(true);
     }
 
