@@ -37,6 +37,7 @@ public class VentanaCrearMaquina extends JDialog implements ActionListener {
     public VentanaCrearMaquina(VentanaPrincipal _ventanaPrincipal, Maquina _maquina) {
         super(_ventanaPrincipal, true);
         maquina = _maquina;
+        ventanaPrincipal = _ventanaPrincipal;
         casino = _ventanaPrincipal.getCasino();
 
         IniciarlizarVentana();
@@ -75,17 +76,11 @@ public class VentanaCrearMaquina extends JDialog implements ActionListener {
         docPrecioJugada.setDocumentFilter(new IntFilter());
 
         JButton btnAceptar = new JButton("Aceptar");
-        btnAceptar.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                GuardarMaquina();
-            }
-
-        });
+        btnAceptar.setName("btnAceptar");
+        btnAceptar.addActionListener(this);
 
         JButton btnCancelar = new JButton("Cancelar");
+        btnCancelar.setName("btnCancelar");
         btnCancelar.addActionListener(this);
 
         JPanel jpForm = new JPanel();
@@ -112,19 +107,27 @@ public class VentanaCrearMaquina extends JDialog implements ActionListener {
 
     private void InicializarMaquina(Maquina maquina) {
         txtNumeroCasillas.setText(String.valueOf(maquina.getNroCasillas()));
-        txtRecaudacion.setText(String.valueOf(maquina.getRecaudacion()));
-        txtRecaudacionMin.setText(String.valueOf(maquina.getRecaudacionMin()));
-        txtPrecioJugada.setText(String.valueOf(maquina.getCostoJugada()));
+        txtRecaudacion.setText(String.valueOf((int) maquina.getRecaudacion()));
+        txtRecaudacionMin.setText(String.valueOf((int) maquina.getRecaudacionMin()));
+        txtPrecioJugada.setText(String.valueOf((int) maquina.getCostoJugada()));
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
+        JButton btnClicked = (JButton) e.getSource();
+
+        switch (btnClicked.getName()) {
+            case "btnAceptar":
+                GuardarMaquina();
+                break;
+            case "btnCancelar":
+                Volver();
+                break;
+        }
 
     }
 
     private void GuardarMaquina() {
-
         Maquina maquina = casino.CrearMaquina(
                 Integer.valueOf(txtNumeroCasillas.getText()),
                 Float.valueOf(txtRecaudacion.getText()),

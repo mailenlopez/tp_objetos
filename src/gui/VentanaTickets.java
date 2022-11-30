@@ -62,15 +62,26 @@ public class VentanaTickets extends JFrame implements ActionListener {
         btnCrearTicket.setForeground(Color.WHITE);
         btnCrearTicket.setFocusPainted(false);
         btnCrearTicket.setFont(new Font("Tahoma", Font.BOLD, 12));
-        btnCrearTicket.setBounds(515, 20, 170, 25);
+        btnCrearTicket.setBounds(515, 30, 170, 25);
         btnCrearTicket.setName("btnCrearTicket");
         btnCrearTicket.addActionListener(this);
+
+        JButton btnVolver = new JButton();
+        btnVolver.setText("Volver");
+        btnVolver.setBackground(new Color(59, 89, 182));
+        btnVolver.setForeground(Color.WHITE);
+        btnVolver.setFocusPainted(false);
+        btnVolver.setFont(new Font("Tahoma", Font.BOLD, 12));
+        btnVolver.setBounds(515, 450, 170, 25);
+        btnVolver.setName("btnVolver");
+        btnVolver.addActionListener(this);
 
         JLabel contentPane = new JLabel();
         contentPane.setBounds(0, 0, 800, 600);
         contentPane.setIcon(new ImageIcon(getClass().getResource("background.jpg")));
         contentPane.setSize(800, 600);
 
+        contenedor.add(btnVolver);
         Grid(contenedor);
         contenedor.add(btnCrearTicket);
         contenedor.add(contentPane);
@@ -85,6 +96,9 @@ public class VentanaTickets extends JFrame implements ActionListener {
         switch (obj.getName()) {
             case "btnCrearTicket":
                 MostrarCrearTicket();
+                break;
+            case "btnVolver":
+                Volver();
                 break;
         }
     }
@@ -122,5 +136,11 @@ public class VentanaTickets extends JFrame implements ActionListener {
         dispose();
         VentanaCrearTicket crearTicket = new VentanaCrearTicket(ventanaPrincipal);
         crearTicket.setVisible(true);
+    }
+
+    private void Volver() {
+        dispose();
+        VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(casino);
+        ventanaPrincipal.setVisible(true);
     }
 }

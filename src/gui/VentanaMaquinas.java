@@ -102,8 +102,22 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
 
         JLabel mensajeLbl = new JLabel();
         mensajeLbl.setText("Selecciona una máquina para accionar. \n Doble click para editar parámetros.");
-        mensajeLbl.setBounds(185, 145, 500, 200);
+        mensajeLbl.setBounds(200, 160, 430, 30);
+        mensajeLbl.setBackground(Color.BLACK);
+        mensajeLbl.setForeground(Color.WHITE);
+        mensajeLbl.setOpaque(true);
 
+        JButton btnVolver = new JButton();
+        btnVolver.setText("Volver");
+        btnVolver.setBackground(new Color(59, 89, 182));
+        btnVolver.setForeground(Color.WHITE);
+        btnVolver.setFocusPainted(false);
+        btnVolver.setFont(new Font("Tahoma", Font.BOLD, 12));
+        btnVolver.setBounds(515, 450, 170, 25);
+        btnVolver.setName("btnVolver");
+        btnVolver.addActionListener(this);
+
+        contenedor.add(btnVolver);
         Grilla(contenedor);
         contenedor.add(btnCrearMaquina);
         contenedor.add(mensajeLbl);
@@ -127,6 +141,9 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
                 break;
             case "btnComprobante":
                 MostrarComprobante();
+                break;
+            case "btnVolver":
+                Volver();
                 break;
         }
     }
@@ -190,7 +207,7 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
         table.setFillsViewportHeight(true);
         table.setDefaultEditor(Object.class, null);
 
-        scrollPane.setBounds(185, 170, 500, 200);
+        scrollPane.setBounds(185, 200, 500, 200);
         container.add(scrollPane);
     }
 
@@ -231,6 +248,12 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
         dispose();
         VentanaPremios ventanaMaquinas = new VentanaPremios(this, maquina);
         ventanaMaquinas.setVisible(true);
+    }
+
+    private void Volver() {
+        dispose();
+        VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(casino);
+        ventanaPrincipal.setVisible(true);
     }
 
 }
