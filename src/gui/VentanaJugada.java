@@ -43,7 +43,6 @@ public class VentanaJugada extends JFrame implements ActionListener {
         setTitle("Casino Corona");
         setSize(800, 600);
         setLocationRelativeTo(null);
-        // setIconImage(new ImageIcon(getClass().getResource("icon.png")).getImage());
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
         addWindowListener(new WindowAdapter() {
@@ -85,6 +84,13 @@ public class VentanaJugada extends JFrame implements ActionListener {
         btnCargarTicket.setBounds(615, 25, 150, 25);
         btnCargarTicket.setName("btnCargarTicket");
         btnCargarTicket.addActionListener(this);
+
+        JLabel contentPane = new JLabel();
+        contentPane.setBounds(0, 0, 800, 600);
+        Image img = new ImageIcon(getClass().getResource("background.jpg")).getImage();
+        Image newImg = img.getScaledInstance(800, 600, java.awt.Image.SCALE_SMOOTH);
+        contentPane.setIcon(new ImageIcon(newImg));
+        contentPane.setSize(800, 600);
 
         JLabel label = new JLabel();
         label.setIcon(new ImageIcon(getClass().getResource("maquina.png")));
@@ -128,6 +134,7 @@ public class VentanaJugada extends JFrame implements ActionListener {
             }
         });
 
+        contenedor.add(contentPane);
         contenedor.add(label);
         contenedor.add(lblMaquinaConfig);
         contenedor.add(lblCreditoDisp);
