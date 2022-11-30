@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
+
 @SuppressWarnings("unused")
 
 public class Maquina {
@@ -20,6 +22,7 @@ public class Maquina {
 	private float costoJugada;
 	private float creditoDisponible;
 	private String[] frutas;
+
 	private Collection<Premio> premiosDisponibles;
 	private Jugada jugada;
 
@@ -52,6 +55,10 @@ public class Maquina {
 		return premiosDisponibles;
 	}
 
+	public String[] getFrutas() {
+		return frutas;
+	}
+
 	public Maquina(int nroMaquina, int nroCasillas, float recaudacion, float recaudacionMin, float costoJugada) {
 		this.nroMaquina = nroMaquina;
 		this.nroCasillas = nroCasillas;
@@ -82,7 +89,9 @@ public class Maquina {
 
 					return dineroPremio;
 				} else {
-					System.out.print("La máquina no tiene recaudación suficiente para pagar el dinero de este premio.");
+					String mensaje = "La máquina no tiene recaudación suficiente para pagar el dinero de este premio.";
+					System.out.print(mensaje);
+					JOptionPane.showMessageDialog(null, mensaje);
 					break;
 				}
 			}
@@ -98,29 +107,29 @@ public class Maquina {
 		return jugada;
 	}
 
-	public void DarBajaPremio(String[] frutas) {
+	public void DarBajaPremio(int premioId) {
 		boolean existePremio = false;
 
-		for (Premio p : premiosDisponibles) {
-			if (p.SoyEstaCombinacion(frutas)) {
-				existePremio = true;
-				premiosDisponibles.remove(p);
-				break;
-			}
-		}
-
-		if (!existePremio) {
-			System.out.print("El premio no ha sido encontrado en la máquina ingresada.");
+		Premio premio = BuscarPremioPorId(premioId);
+		if (premio != null) {
+			premiosDisponibles.remove(premio);
+		} else {
+			String mensaje = "El premio no ha sido encontrado en la máquina ingresada.";
+			System.out.print(mensaje);
+			JOptionPane.showMessageDialog(null, mensaje);
 		}
 	}
 
-	public void CargarPremio(String[] combinacionFrutas, float dineroPremio) {
+	public Premio CargarPremio(String[] combinacionFrutas, float dineroPremio) {
 		if (combinacionFrutas.length == nroCasillas) {
-			Premio nuevoPremio = new Premio(combinacionFrutas, dineroPremio);
+			Premio nuevoPremio = new Premio(premiosDisponibles.size() + 1, combinacionFrutas, dineroPremio);
 			premiosDisponibles.add(nuevoPremio);
+			return nuevoPremio;
 		} else {
-			System.out.print(
-					"El número de frutas de las combinaciones premiadas debe coincidir con el número de casillas de la máquina.");
+			String mensaje = "El número de frutas de las combinaciones premiadas debe coincidir con el número de casillas de la máquina.";
+			System.out.print(mensaje);
+			JOptionPane.showMessageDialog(null, mensaje);
+			return null;
 		}
 	}
 
@@ -128,17 +137,26 @@ public class Maquina {
 		this.creditoDisponible += credito;
 	}
 
-	public void GenerarJugada() {
+	public Jugada GenerarJugada() {
+		String mensaje;
+
 		if (recaudacion <= recaudacionMin) {
-			System.out.print(
-					"La máquina ha alcanzado su recaudación mínima. Existe la posibilidad de no poder pagar los próximos premios.");
+			mensaje = "La máquina ha alcanzado su recaudación mínima. Existe la posibilidad de no poder pagar los próximos premios.";
+			System.out.print(mensaje);
+			JOptionPane.showMessageDialog(null, mensaje);
 		}
 
 		if (creditoDisponible >= costoJugada) {
 			recaudacion += costoJugada;
 			creditoDisponible -= costoJugada;
 			jugada.GenerarCombinacion(nroCasillas, frutas);
+		} else {
+			mensaje = "El crédito disponible no alcanza para realizar una jugada.";
+			System.out.print(mensaje);
+			JOptionPane.showMessageDialog(null, mensaje);
 		}
+
+		return jugada;
 	}
 
 	private void LimpiarSesionMaquina() {
@@ -147,9 +165,29 @@ public class Maquina {
 	}
 
 	public Comprobante EmitirComprobante() {
-		Comprobante comprobante = new Comprobante(nroMaquina, nroCasillas, creditoDisponible, new Date());
+		Comprobante comprobante = new Comprobante(nroMaquina, creditoDisponible, new Date());
 		LimpiarSesionMaquina();
 
 		return comprobante;
+	}
+
+	public Premio BuscarPremioPorCombinacion(String[] frutas) {
+		for (Premio p : premiosDisponibles) {
+			if (p.SoyEstaCombinacion(frutas)) {
+				return p;
+			}
+		}
+
+		return null;
+	}
+
+	public Premio BuscarPremioPorId(int id) {
+		for (Premio p : premiosDisponibles) {
+			if (p.SoyEstePremio(id)) {
+				return p;
+			}
+		}
+
+		return null;
 	}
 }

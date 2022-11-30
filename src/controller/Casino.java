@@ -1,12 +1,14 @@
 package controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+
+import javax.swing.JOptionPane;
 
 import modelo.Comprobante;
 import modelo.Jugada;
 import modelo.Maquina;
+import modelo.Premio;
 import modelo.Ticket;
 
 public class Casino {
@@ -22,6 +24,10 @@ public class Casino {
 
 	public Collection<Maquina> getMaquinas() {
 		return maquinas;
+	}
+
+	public Collection<Ticket> getTickets() {
+		return tickets;
 	}
 
 	public Casino() {
@@ -42,18 +48,20 @@ public class Casino {
 		if (maquina != null) {
 			maquina.CargarPremio(combinacion, dinero);
 		} else {
-			System.out.print(
-					"El premio no ha podido ser dado de alta ya que el número de máquina ingresado no corresponde a una máquina activa existente.");
+			String mensaje = "El premio no ha podido ser dado de alta ya que el número de máquina ingresado no corresponde a una máquina activa existente.";
+			System.out.print(mensaje);
+			JOptionPane.showMessageDialog(null, mensaje);
 		}
 	}
 
-	public void BajaPremio(int nroMaquina, String[] combinacion) {
+	public void BajaPremio(int nroMaquina, int premioId) {
 		Maquina maquina = BuscarMaquina(nroMaquina);
 		if (maquina != null) {
-			maquina.DarBajaPremio(combinacion);
+			maquina.DarBajaPremio(premioId);
 		} else {
-			System.out.print(
-					"El premio no ha podido ser dado de baja ya que el número de máquina ingresado no corresponde a una máquina activa existente.");
+			String mensaje = "El premio no ha podido ser dado de baja ya que el número de máquina ingresado no corresponde a una máquina activa existente.";
+			System.out.print(mensaje);
+			JOptionPane.showMessageDialog(null, mensaje);
 		}
 	}
 
@@ -69,16 +77,25 @@ public class Casino {
 
 	public void CargarCreditoMaquina(int nroMaquina, int nroTicket) {
 		Maquina maquina = BuscarMaquina(nroMaquina);
+		String mensaje;
 
 		if (maquina != null) {
 			Ticket ticket = BuscarTicket(nroTicket);
 			if (ticket != null) {
 				maquina.CargarCreditoDisponible(ticket.getImporte());
+				mensaje = "El ticket se ha cargado correctamente. Nuevo crédito disponible: $"
+						+ maquina.getCreditoDisponible();
+				System.out.print(mensaje);
+				JOptionPane.showMessageDialog(null, mensaje);
 			} else {
-				System.out.print("El ticket ingresado no existe.");
+				mensaje = "El ticket ingresado no existe.";
+				System.out.print(mensaje);
+				JOptionPane.showMessageDialog(null, mensaje);
 			}
 		} else {
-			System.out.print("La maquina ingresada no existe.");
+			mensaje = "La maquina ingresada no existe.";
+			System.out.print(mensaje);
+			JOptionPane.showMessageDialog(null, mensaje);
 		}
 	}
 
@@ -106,27 +123,46 @@ public class Casino {
 			return maquina.EmitirComprobante();
 		}
 
-		System.out.print("El número de máquina ingresado no corresponde a ningúna máquina activa existente.");
+		String mensaje = "El número de máquina ingresado no corresponde a ningúna máquina activa existente.";
+		System.out.print(mensaje);
+		JOptionPane.showMessageDialog(null, mensaje);
+
 		return null;
 	}
 
 	public Jugada Jugar(int nroMaquina) {
+
+		Maquina maquina = BuscarMaquina(nroMaquina);
+
+		if (maquina == null) {
+			return null;
+		}
+
+		Jugada jugada = maquina.GenerarJugada();
+		// float premio = maquina.CalcularPremio();
+
+		// System.out.print("Jugada obtenida: " +
+		// Arrays.toString(jugada.getCombinacion()));
+
+		// if (premio > 0) {
+		// System.out.print("Premio obtenido!: Ha ganado $" + premio);
+		// }
+
+		return jugada;
+	}
+
+	public float EsPremiado(int nroMaquina, Jugada jugada) {
 		Maquina maquina = BuscarMaquina(nroMaquina);
 
 		if (maquina != null) {
-			maquina.GenerarJugada();
-			float premio = maquina.CalcularPremio();
-			Jugada jugada = maquina.getUltimaJugada();
-
-			System.out.print("Jugada obtenida: " + Arrays.toString(jugada.getCombinacion()));
-
-			if (premio > 0) {
-				System.out.print("Premio obtenido!: Ha ganado $" + premio);
+			Premio premio = maquina.BuscarPremioPorCombinacion(jugada.getCombinacion());
+			if (premio != null) {
+				JOptionPane.showMessageDialog(null, "Premio obtenido: $" + premio.getDinero());
+				return premio.getDinero();
 			}
-
-			return jugada;
 		}
 
-		return null;
+		JOptionPane.showMessageDialog(null, "Sin premio.");
+		return 0;
 	}
 }

@@ -5,51 +5,41 @@ import javax.swing.JDialog;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.text.PlainDocument;
 
 import controller.Casino;
 import filter.IntFilter;
 import modelo.Maquina;
 
-import java.awt.event.WindowEvent;
-import java.util.Collection;
-import java.awt.event.WindowAdapter;
-
-public class CrearMaquina extends JDialog implements ActionListener {
+public class VentanaCrearMaquina extends JDialog implements ActionListener {
     private Maquina maquina;
-    private VentanaPrincipal ventanaPrincipal;
+    private Casino casino;
     private JLabel lblNumeroCasillas, lblRecaudacion, lblRecaudacionMin, lblPrecioJugada;
     private JTextField txtNumeroCasillas, txtRecaudacion, txtRecaudacionMin, txtPrecioJugada;
     private JPanel jpMainPanel;
 
-    public CrearMaquina(VentanaPrincipal _ventanaPrincipal) {
+    public VentanaCrearMaquina(VentanaPrincipal _ventanaPrincipal) {
         super(_ventanaPrincipal, true);
-        ventanaPrincipal = _ventanaPrincipal;
-
+        casino = _ventanaPrincipal.getCasino();
         IniciarlizarVentana();
         InicializarComponentes();
     }
 
-    public CrearMaquina(VentanaPrincipal _ventanaPrincipal, Maquina _maquina) {
+    public VentanaCrearMaquina(VentanaPrincipal _ventanaPrincipal, Maquina _maquina) {
         super(_ventanaPrincipal, true);
-        ventanaPrincipal = _ventanaPrincipal;
         maquina = _maquina;
+        casino = _ventanaPrincipal.getCasino();
 
         IniciarlizarVentana();
         InicializarComponentes();
+        InicializarMaquina(maquina);
     }
 
     private void IniciarlizarVentana() {
@@ -118,6 +108,13 @@ public class CrearMaquina extends JDialog implements ActionListener {
         add(jpMainPanel);
     }
 
+    private void InicializarMaquina(Maquina maquina) {
+        txtNumeroCasillas.setText(String.valueOf(maquina.getNroCasillas()));
+        txtRecaudacion.setText(String.valueOf(maquina.getRecaudacion()));
+        txtRecaudacionMin.setText(String.valueOf(maquina.getRecaudacionMin()));
+        txtPrecioJugada.setText(String.valueOf(maquina.getCostoJugada()));
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
@@ -126,7 +123,7 @@ public class CrearMaquina extends JDialog implements ActionListener {
 
     private void GuardarMaquina() {
 
-        Maquina maquina = ventanaPrincipal.getCasino().CrearMaquina(
+        Maquina maquina = casino.CrearMaquina(
                 Integer.valueOf(txtNumeroCasillas.getText()),
                 Float.valueOf(txtRecaudacion.getText()),
                 Float.valueOf(txtRecaudacionMin.getText()),

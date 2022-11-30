@@ -2,19 +2,24 @@ package gui;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import controller.Casino;
+import modelo.Maquina;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 
 public class VentanaPrincipal extends JFrame implements ActionListener {
 
     private Container contenedor;
     private Casino casino;
+    private JComboBox[] comboMaquinas;
 
     /**
      * @return Casino instance
@@ -49,7 +54,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         btnMaquinas.setForeground(Color.WHITE);
         btnMaquinas.setFocusPainted(false);
         btnMaquinas.setFont(new Font("Tahoma", Font.BOLD, 12));
-        btnMaquinas.setBounds(515, 20, 170, 25);
+        btnMaquinas.setBounds(515, 40, 170, 25);
         btnMaquinas.setName("btnMaquinas");
         btnMaquinas.addActionListener(this);
 
@@ -59,9 +64,22 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         btnTickets.setForeground(Color.WHITE);
         btnTickets.setFocusPainted(false);
         btnTickets.setFont(new Font("Tahoma", Font.BOLD, 12));
-        btnTickets.setBounds(515, 65, 170, 25);
-        btnMaquinas.setName("btnTickets");
+        btnTickets.setBounds(515, 85, 170, 25);
+        btnTickets.setName("btnTickets");
         btnTickets.addActionListener(this);
+
+        JButton btnJugada = new JButton();
+        btnJugada.setText("Iniciar Jugada");
+        btnJugada.setBounds(500, 150, 200, 100);
+        btnJugada.setBackground(Color.BLACK);
+        btnJugada.setName("btnJugada");
+        btnJugada.setBorderPainted(false);
+        btnJugada.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        Image img = new ImageIcon(getClass().getResource("jugar.png")).getImage();
+        Image newimg = img.getScaledInstance(200, 100, java.awt.Image.SCALE_SMOOTH);
+        btnJugada.setIcon(new ImageIcon(newimg));
+        btnJugada.addActionListener(this);
 
         JLabel contentPane = new JLabel();
         contentPane.setBounds(0, 0, 800, 600);
@@ -70,19 +88,24 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
         contenedor.add(btnMaquinas);
         contenedor.add(btnTickets);
+        contenedor.add(btnJugada);
         contenedor.add(contentPane);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        String obj = e.getActionCommand();
-        switch (obj) {
-            case "Maquinas":
+        JButton obj = (JButton) e.getSource();
+
+        switch (obj.getName()) {
+            case "btnMaquinas":
                 MostrarVentanaMaquinas();
                 break;
-            case "Tickets":
-                System.out.print("Entró a tickets");
+            case "btnTickets":
+                MostrarVentanaTickets();
+                break;
+            case "btnJugada":
+                SeleccionarMaquina();
                 break;
         }
     }
@@ -92,5 +115,22 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         this.setDefaultCloseOperation(HIDE_ON_CLOSE);
         ventanaMaquinas.setVisible(true);
         this.setVisible(false);
+    }
+
+    public void MostrarVentanaTickets() {
+        VentanaTickets ventanaMaquinas = new VentanaTickets(this);
+        this.setDefaultCloseOperation(HIDE_ON_CLOSE);
+        ventanaMaquinas.setVisible(true);
+        this.setVisible(false);
+    }
+
+    private void SeleccionarMaquina() {
+        if (casino.getMaquinas().size() > 0) {
+            SeleccionaMaquina seleccionaMaquina = new SeleccionaMaquina(this, casino);
+            seleccionaMaquina.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "Debe tener al menos una máquina creada para jugar.");
+        }
+
     }
 }

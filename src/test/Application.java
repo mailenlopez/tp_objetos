@@ -14,7 +14,6 @@ public class Application {
     private static String[] listadoFrutas = { "Banana", "Frutilla", "Guinda", "Manzana", "Sandia", "Uva" };
 
     public static void main(String[] args) {
-
         Casino casino = Casino.getInstance();
         VentanaPrincipal ventana = new VentanaPrincipal(casino);
         ventana.setVisible(true);
@@ -36,8 +35,6 @@ public class Application {
     }
 
     private static int CrearMaquina(Casino casino, Scanner scanner) {
-        System.out.print("Hola crayola!\n");
-
         System.out.print("--- Creando nueva máquina --- \n");
         System.out.print("Número de casillas: 3 \n");
 
@@ -124,6 +121,7 @@ public class Application {
         return maquina;
     }
 
+    // TODO Pasar a la clase maquina
     private static Premio BuscarPremio(Collection<Premio> premios, String[] combinacion) {
         Premio premio = premios.stream()
                 .filter(p -> p.SoyEstaCombinacion(combinacion))
@@ -147,7 +145,7 @@ public class Application {
                     .findFirst()
                     .orElse(null);
 
-            maquina.DarBajaPremio(premioAEliminar.getCombinacionGanadora());
+            maquina.DarBajaPremio(premioAEliminar.getId());
 
             System.out.print("La siguiente combinación ha sido dada de baja de la lista de premios: \n"
                     + Arrays.toString(premioAEliminar.getCombinacionGanadora()) + "\n");

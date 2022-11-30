@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -14,30 +16,32 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.*;
 
+import controller.Casino;
 import modelo.Maquina;
+import modelo.TableModelMaquina;
 
-import java.awt.event.WindowEvent;
 import java.util.Collection;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Vector;
-import java.awt.event.WindowAdapter;
 
 public class VentanaMaquinas extends JFrame implements ActionListener {
 
     private VentanaPrincipal ventanaPrincipal;
     private Container contenedor;
+    private Maquina maquina;
+    private int maquinaSeleccionada;
+    private Casino casino;
 
     public VentanaMaquinas(VentanaPrincipal _ventanaPrincipal) {
         super();
         ventanaPrincipal = _ventanaPrincipal;
-        IniciarlizarVentana();
+        casino = _ventanaPrincipal.getCasino();
+        maquinaSeleccionada = 0;
+        InicializarVentana();
         InicializarComponentes();
     }
 
-    public void IniciarlizarVentana() {
+    public void InicializarVentana() {
         setResizable(false);
         setTitle("Casino Corona");
         setSize(800, 600);
@@ -58,34 +62,52 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
         contenedor = getContentPane();
         contenedor.setLayout(null);
 
-        JButton btnMaquinas = new JButton();
-        btnMaquinas.setText("Crear Maquina");
-        btnMaquinas.setBackground(new Color(59, 89, 182));
-        btnMaquinas.setForeground(Color.WHITE);
-        btnMaquinas.setFocusPainted(false);
-        btnMaquinas.setFont(new Font("Tahoma", Font.BOLD, 12));
-        btnMaquinas.setBounds(515, 20, 170, 25);
-        btnMaquinas.setName("btnMaquinas");
-        btnMaquinas.addActionListener(this);
+        JButton btnCrearMaquina = new JButton();
+        btnCrearMaquina.setText("Crear Maquina");
+        btnCrearMaquina.setBackground(new Color(59, 89, 182));
+        btnCrearMaquina.setForeground(Color.WHITE);
+        btnCrearMaquina.setFocusPainted(false);
+        btnCrearMaquina.setFont(new Font("Tahoma", Font.BOLD, 12));
+        btnCrearMaquina.setBounds(515, 20, 170, 25);
+        btnCrearMaquina.setName("btnCrearMaquina");
+        btnCrearMaquina.addActionListener(this);
 
-        JButton btnTickets = new JButton();
-        btnTickets.setText("Maquinas Disponibles");
-        btnTickets.setBackground(new Color(59, 89, 182));
-        btnTickets.setForeground(Color.WHITE);
-        btnTickets.setFocusPainted(false);
-        btnTickets.setFont(new Font("Tahoma", Font.BOLD, 12));
-        btnTickets.setBounds(515, 65, 170, 25);
-        btnMaquinas.setName("btnTickets");
-        btnTickets.addActionListener(this);
+        JButton btnPremios = new JButton();
+        btnPremios.setText("Premios");
+        btnPremios.setEnabled(false);
+        btnPremios.setBackground(new Color(59, 89, 182));
+        btnPremios.setForeground(Color.WHITE);
+        btnPremios.setFocusPainted(false);
+        btnPremios.setFont(new Font("Tahoma", Font.BOLD, 12));
+        btnPremios.setBounds(515, 65, 170, 25);
+        btnPremios.setName("btnPremios");
+        btnPremios.addActionListener(this);
+
+        JButton btnComprobante = new JButton();
+        btnComprobante.setText("Emitir Comprobante");
+        btnComprobante.setEnabled(false);
+        btnComprobante.setBackground(new Color(59, 89, 182));
+        btnComprobante.setForeground(Color.WHITE);
+        btnComprobante.setFocusPainted(false);
+        btnComprobante.setFont(new Font("Tahoma", Font.BOLD, 12));
+        btnComprobante.setBounds(515, 110, 170, 25);
+        btnComprobante.setName("btnComprobante");
+        btnComprobante.addActionListener(this);
 
         JLabel contentPane = new JLabel();
         contentPane.setBounds(0, 0, 800, 600);
         contentPane.setIcon(new ImageIcon(getClass().getResource("background.jpg")));
         contentPane.setSize(800, 600);
 
-        Grid(contenedor);
-        contenedor.add(btnMaquinas);
-        contenedor.add(btnTickets);
+        JLabel mensajeLbl = new JLabel();
+        mensajeLbl.setText("Selecciona una máquina para accionar. \n Doble click para editar parámetros.");
+        mensajeLbl.setBounds(185, 145, 500, 200);
+
+        Grilla(contenedor);
+        contenedor.add(btnCrearMaquina);
+        contenedor.add(mensajeLbl);
+        contenedor.add(btnPremios);
+        contenedor.add(btnComprobante);
         contenedor.add(contentPane);
 
     }
@@ -93,18 +115,22 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        String obj = e.getActionCommand();
-        switch (obj) {
-            case "Crear Maquina":
+        JButton obj = (JButton) e.getSource();
+
+        switch (obj.getName()) {
+            case "btnCrearMaquina":
                 MostrarCrearMaquina(0);
                 break;
-            case "btnTickets":
-                System.out.print("Entró a tickets");
+            case "btnPremios":
+                MostrarPremios();
+                break;
+            case "btnComprobante":
+                MostrarComprobante();
                 break;
         }
     }
 
-    private void Grid(Container container) {
+    private void Grilla(Container container) {
 
         String[] columnNames = { "Id",
                 "Casillas",
@@ -113,9 +139,11 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
                 "Costo"
         };
 
-        Collection<Maquina> maquinas = ventanaPrincipal.getCasino().getMaquinas();
+        Collection<Maquina> maquinas = casino.getMaquinas();
         ArrayList<Maquina> arrayMaquinas = new ArrayList<>(maquinas);
 
+        TableModelMaquina tableModel = new TableModelMaquina();
+        tableModel.addElement(maquina);
         Object[][] data = new Object[maquinas.size()][columnNames.length];
 
         for (int i = 0; i < arrayMaquinas.size(); i++) {
@@ -138,9 +166,19 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
 
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
+                if (me.getClickCount() == 1) {
+                    maquinaSeleccionada = (int) table.getValueAt(table.getSelectedRow(), 0);
+                    maquina = casino.BuscarMaquina(maquinaSeleccionada);
+
+                    Component configComp = EncontrarComponentePorNombre("btnPremios");
+                    configComp.setEnabled(true);
+
+                    Component comprobanteComp = EncontrarComponentePorNombre("btnComprobante");
+                    comprobanteComp.setEnabled(true);
+                }
+
                 if (me.getClickCount() == 2) {
                     Object objeto = table.getValueAt(table.getSelectedRow(), 0);
-                    // TODO: Agregar la busqueda de la maquina por su Id
                     System.out.println(objeto);
                     MostrarCrearMaquina((int) objeto);
                 }
@@ -151,25 +189,47 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
         table.setFillsViewportHeight(true);
         table.setDefaultEditor(Object.class, null);
 
-        scrollPane.setBounds(185, 105, 500, 200);
+        scrollPane.setBounds(185, 170, 500, 200);
         container.add(scrollPane);
     }
 
     private void MostrarCrearMaquina(int numeroMaquina) {
 
         Maquina maquina = null;
-        CrearMaquina crearMaquina;
+        VentanaCrearMaquina crearMaquina;
 
         if (numeroMaquina > 0) {
-            maquina = ventanaPrincipal.getCasino().BuscarMaquina(numeroMaquina);
+            maquina = casino.BuscarMaquina(numeroMaquina);
         }
 
         if (maquina != null) {
-            crearMaquina = new CrearMaquina(ventanaPrincipal, maquina);
+            crearMaquina = new VentanaCrearMaquina(ventanaPrincipal, maquina);
         } else {
-            crearMaquina = new CrearMaquina(ventanaPrincipal);
+            crearMaquina = new VentanaCrearMaquina(ventanaPrincipal);
         }
 
         crearMaquina.setVisible(true);
+    }
+
+    private Component EncontrarComponentePorNombre(String nombreComponente) {
+        for (Component componente : contenedor.getComponents()) {
+            if (nombreComponente.equals(componente.getName())) {
+                return componente;
+            }
+        }
+
+        return null;
+    }
+
+    private void MostrarComprobante() {
+        VentanaComprobante ventanaComprobante = new VentanaComprobante(this, casino, maquina);
+        ventanaComprobante.setVisible(true);
+    }
+
+    private void MostrarPremios() {
+        VentanaPremios ventanaMaquinas = new VentanaPremios(this, maquina);
+        this.setDefaultCloseOperation(HIDE_ON_CLOSE);
+        ventanaMaquinas.setVisible(true);
+        this.setVisible(false);
     }
 }
