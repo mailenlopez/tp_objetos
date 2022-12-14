@@ -55,12 +55,12 @@ public class Casino {
 
 	public MaquinaView ModificarMaquina(int nroMaquina, int nroCasillas, float recaudacion, float recaudacionMin,
 			float costoJugada) {
-		// Maquina maquina = BuscarMaquina(nroMaquina);
-		Maquina maquina = maquinas.stream()
-				.filter(s -> s.getNroMaquina() == nroMaquina)
-				.findFirst().orElse(null);
+		Maquina maquina = BuscarMaquina(nroMaquina);
 
 		if (maquina != null) {
+			maquina = maquinas.stream()
+					.filter(s -> s.getNroMaquina() == nroMaquina)
+					.findFirst().orElse(null);
 			maquina.ModificarMaquina(nroCasillas, recaudacion, recaudacionMin, costoJugada);
 		}
 
