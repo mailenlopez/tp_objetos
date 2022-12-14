@@ -9,14 +9,12 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.text.PlainDocument;
 
 import controller.Casino;
 import filter.IntFilter;
 import view.MaquinaView;
-import view.PremioView;
 
 public class VentanaCrearPremio extends JDialog implements ActionListener {
     private MaquinaView maquina;
@@ -103,16 +101,8 @@ public class VentanaCrearPremio extends JDialog implements ActionListener {
         for (int i = 0; i < nroCasillas; i++) {
             combinacion[i] = comboPremios[i].getItemAt(comboPremios[i].getSelectedIndex()).toString();
         }
-
-        PremioView premioExistente = casino.BuscarPremioPorCombinacion(maquina.getNroMaquina(), combinacion);
-
-        if (premioExistente != null) {
-            JOptionPane.showMessageDialog(contenedor,
-                    "La combinación elegida ya cuenta con un premio en esta máquina.");
-        } else {
-            casino.AltaPremio(maquina.getNroMaquina(), combinacion, Integer.valueOf(txtDinero.getText()));
-            Volver();
-        }
+        casino.AltaPremio(maquina.getNroMaquina(), combinacion, Integer.valueOf(txtDinero.getText()));
+        Volver();
     }
 
     private void Volver() {

@@ -121,7 +121,6 @@ public class Application {
         return maquina;
     }
 
-    // TODO Pasar a la clase maquina
     private static Premio BuscarPremio(Collection<Premio> premios, String[] combinacion) {
         Premio premio = premios.stream()
                 .filter(p -> p.SoyEstaCombinacion(combinacion))

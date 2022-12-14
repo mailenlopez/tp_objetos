@@ -121,17 +121,33 @@ public class Maquina {
 		}
 	}
 
-	public Premio CargarPremio(String[] combinacion, float dineroPremio) {
-		if (combinacion.length == nroCasillas) {
+	public Premio CrearPremio(String[] combinacion, float dineroPremio) {
+		if (TengoEseNroCasillas(combinacion.length)) {
 			Premio nuevoPremio = new Premio(premiosDisponibles.size() + 1, combinacion, dineroPremio);
-			premiosDisponibles.add(nuevoPremio);
-			return nuevoPremio;
+			if (!TengoEsePremio(combinacion)) {
+				premiosDisponibles.add(nuevoPremio);
+				return nuevoPremio;
+			} else {
+				String mensaje = "La combinación elegida ya cuenta con un premio en esta máquina.";
+				System.out.print(mensaje);
+				JOptionPane.showMessageDialog(null, mensaje);
+			}
 		} else {
 			String mensaje = "El número de frutas de las combinaciones premiadas debe coincidir con el número de casillas de la máquina.";
 			System.out.print(mensaje);
 			JOptionPane.showMessageDialog(null, mensaje);
-			return null;
 		}
+		return null;
+	}
+
+	private boolean TengoEseNroCasillas(int nroCasillas) {
+		return this.nroCasillas == nroCasillas;
+	}
+
+	private boolean TengoEsePremio(String[] combinacion) {
+		Premio premio = BuscarPremioPorCombinacion(combinacion);
+
+		return premio != null;
 	}
 
 	public void CargarCreditoDisponible(float credito) {

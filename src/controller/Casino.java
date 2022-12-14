@@ -7,12 +7,10 @@ import javax.swing.JOptionPane;
 
 import modelo.Jugada;
 import modelo.Maquina;
-import modelo.Premio;
 import modelo.Ticket;
 import view.ComprobanteView;
 import view.JugadaView;
 import view.MaquinaView;
-import view.PremioView;
 import view.TicketView;
 
 public class Casino {
@@ -70,7 +68,7 @@ public class Casino {
 	public void AltaPremio(int nroMaquina, String[] combinacion, float dinero) {
 		Maquina maquina = BuscarMaquina(nroMaquina);
 		if (maquina != null) {
-			maquina.CargarPremio(combinacion, dinero);
+			maquina.CrearPremio(combinacion, dinero);
 		} else {
 			String mensaje = "El premio no ha podido ser dado de alta ya que el número de máquina ingresado no corresponde a una máquina activa existente.";
 			System.out.print(mensaje);
@@ -87,18 +85,6 @@ public class Casino {
 			System.out.print(mensaje);
 			JOptionPane.showMessageDialog(null, mensaje);
 		}
-	}
-
-	public PremioView BuscarPremioPorCombinacion(int nroMaquina, String[] combinacion) {
-		Maquina maquina = BuscarMaquina(nroMaquina);
-		if (maquina != null) {
-			Premio premio = maquina.BuscarPremioPorCombinacion(combinacion);
-			if (premio != null) {
-				return premio.toView();
-			}
-		}
-
-		return null;
 	}
 
 	private Maquina BuscarMaquina(int nroMaquina) {
