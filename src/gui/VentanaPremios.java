@@ -15,8 +15,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import modelo.Maquina;
+import controller.Casino;
 import modelo.Premio;
+import view.MaquinaView;
 
 import java.awt.event.WindowEvent;
 import java.util.Collection;
@@ -30,13 +31,15 @@ public class VentanaPremios extends JFrame implements ActionListener {
     private VentanaPrincipal ventanaPrincipal;
     private Container contenedor;
     private int premioSeleccionado;
-    private Maquina maquina;
+    private MaquinaView maquina;
+    private Casino casino;
 
-    public VentanaPremios(VentanaMaquinas _ventanaMaquinas, VentanaPrincipal _ventanaPrincipal, Maquina _maquina) {
+    public VentanaPremios(VentanaMaquinas _ventanaMaquinas, VentanaPrincipal _ventanaPrincipal, MaquinaView _maquina) {
         super();
         ventanaMaquinas = _ventanaMaquinas;
         ventanaPrincipal = _ventanaPrincipal;
         maquina = _maquina;
+        casino = _ventanaPrincipal.getCasino();
         InicializarVentana();
         InicializarComponentes();
     }
@@ -174,7 +177,7 @@ public class VentanaPremios extends JFrame implements ActionListener {
     }
 
     private void BorrarPremio(int nroPremio) {
-        maquina.DarBajaPremio(nroPremio);
+        casino.BajaPremio(maquina.getNroMaquina(), nroPremio);
     }
 
     private Component EncontrarComponentePorNombre(String componentName) {

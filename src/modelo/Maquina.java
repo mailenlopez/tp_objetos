@@ -7,24 +7,24 @@ import java.util.Date;
 
 import javax.swing.JOptionPane;
 
+import view.MaquinaView;
+
 @SuppressWarnings("unused")
 
 public class Maquina {
 	private int nroMaquina;
-
-	public void setNroMaquina(int nroMaquina) {
-		this.nroMaquina = nroMaquina;
-	}
-
 	private int nroCasillas;
 	private float recaudacion;
 	private float recaudacionMin;
 	private float costoJugada;
 	private float creditoDisponible;
 	private String[] frutas;
-
 	private Collection<Premio> premiosDisponibles;
 	private Jugada jugada;
+
+	public void setNroMaquina(int nroMaquina) {
+		this.nroMaquina = nroMaquina;
+	}
 
 	// Getters
 	public int getNroMaquina() {
@@ -59,6 +59,10 @@ public class Maquina {
 		return frutas;
 	}
 
+	public Jugada getUltimaJugada() {
+		return jugada;
+	}
+
 	public Maquina(int nroMaquina, int nroCasillas, float recaudacion, float recaudacionMin, float costoJugada) {
 		this.nroMaquina = nroMaquina;
 		this.nroCasillas = nroCasillas;
@@ -71,12 +75,13 @@ public class Maquina {
 		this.jugada = new Jugada();
 	}
 
-	public boolean SoyEsaMaquina(int nroMaquina) {
-		return (nroMaquina == this.nroMaquina);
+	public MaquinaView toView() {
+		return new MaquinaView(nroMaquina, nroCasillas, recaudacion, recaudacionMin, costoJugada, creditoDisponible,
+				frutas, premiosDisponibles);
 	}
 
-	private boolean TengoEseNroCasillas(int nroCasillas) {
-		return (nroCasillas == this.nroCasillas);
+	public boolean SoyEsaMaquina(int nroMaquina) {
+		return (nroMaquina == this.nroMaquina);
 	}
 
 	public float CalcularPremio() {
@@ -103,10 +108,6 @@ public class Maquina {
 		recaudacion -= dineroPremio;
 	}
 
-	public Jugada getUltimaJugada() {
-		return jugada;
-	}
-
 	public void DarBajaPremio(int nroPremio) {
 		boolean existePremio = false;
 
@@ -120,9 +121,9 @@ public class Maquina {
 		}
 	}
 
-	public Premio CargarPremio(String[] combinacionFrutas, float dineroPremio) {
-		if (combinacionFrutas.length == nroCasillas) {
-			Premio nuevoPremio = new Premio(premiosDisponibles.size() + 1, combinacionFrutas, dineroPremio);
+	public Premio CargarPremio(String[] combinacion, float dineroPremio) {
+		if (combinacion.length == nroCasillas) {
+			Premio nuevoPremio = new Premio(premiosDisponibles.size() + 1, combinacion, dineroPremio);
 			premiosDisponibles.add(nuevoPremio);
 			return nuevoPremio;
 		} else {
@@ -181,9 +182,9 @@ public class Maquina {
 		return null;
 	}
 
-	public Premio BuscarPremioPorId(int id) {
+	public Premio BuscarPremioPorId(int nroPremio) {
 		for (Premio p : premiosDisponibles) {
-			if (p.SoyEstePremio(id)) {
+			if (p.SoyEstePremio(nroPremio)) {
 				return p;
 			}
 		}

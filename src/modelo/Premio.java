@@ -2,13 +2,15 @@ package modelo;
 
 import java.util.Arrays;
 
+import view.PremioView;
+
 public class Premio {
-	private int id;
+	private int nroPremio;
 	private String[] combinacionGanadora;
 	private float dinero;
 
 	public int getId() {
-		return id;
+		return nroPremio;
 	}
 
 	public String[] getCombinacionGanadora() {
@@ -19,8 +21,8 @@ public class Premio {
 		return dinero;
 	}
 
-	public Premio(int id, String[] combinacionGanadora, float dinero) {
-		this.id = id;
+	public Premio(int nroPremio, String[] combinacionGanadora, float dinero) {
+		this.nroPremio = nroPremio;
 		this.combinacionGanadora = combinacionGanadora;
 		this.dinero = dinero;
 	}
@@ -29,7 +31,11 @@ public class Premio {
 		return Arrays.equals(combinacion, combinacionGanadora);
 	}
 
-	public boolean SoyEstePremio(int premioId) {
-		return (this.id == premioId);
+	public boolean SoyEstePremio(int nroPremio) {
+		return (this.nroPremio == nroPremio);
+	}
+
+	public PremioView toView() {
+		return new PremioView(nroPremio, combinacionGanadora, dinero);
 	}
 }

@@ -1,6 +1,5 @@
 package gui;
 
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 import java.awt.*;
@@ -16,11 +15,11 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 import controller.Casino;
-import modelo.Jugada;
-import modelo.Maquina;
+import view.JugadaView;
+import view.MaquinaView;
 
 public class VentanaJugada extends JFrame implements ActionListener {
-    private Maquina maquina;
+    private MaquinaView maquina;
     private Casino casino;
     private JLabel lblMaquinaConfig, lblCreditoDisp;
     private Container contenedor;
@@ -28,22 +27,22 @@ public class VentanaJugada extends JFrame implements ActionListener {
     private JLabel[] lblFrutas;
     private String[] frutas;
 
-    public VentanaJugada(VentanaPrincipal _ventanaPrincipal, Maquina _maquina) {
+    public VentanaJugada(VentanaPrincipal _ventanaPrincipal, MaquinaView _maquina) {
         super();
         maquina = _maquina;
         ventanaPrincipal = _ventanaPrincipal;
         casino = _ventanaPrincipal.getCasino();
         frutas = maquina.getFrutas();
-        IniciarlizarVentana();
+        InicializarVentana();
         InicializarComponentes();
     }
 
-    private void IniciarlizarVentana() {
+    private void InicializarVentana() {
         setResizable(false);
         setTitle("Casino Corona");
         setSize(800, 600);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -182,14 +181,18 @@ public class VentanaJugada extends JFrame implements ActionListener {
     }
 
     private void MostrarCargarTicket() {
-        VentanaCargarTicket ventanaMaquinas = new VentanaCargarTicket(this, ventanaPrincipal, maquina);
-        ventanaMaquinas.setVisible(true);
+        dispose();
+        VentanaCargarTicket ventanaCargarTicket = new VentanaCargarTicket(this, ventanaPrincipal, maquina);
+        ventanaCargarTicket.setVisible(true);
     }
 
     private void MostrarComprobante() {
-        VentanaComprobante ventanaComprobante = new VentanaComprobante(this, casino, maquina);
+        dispose();
+        VentanaComprobante ventanaComprobante = new VentanaComprobante(this, ventanaPrincipal, maquina);
         ventanaComprobante.setVisible(true);
-        lblCreditoDisp.setText("Credito :" + maquina.getCreditoDisponible());
+
+        maquina = casino.ObtenerMaquina(maquina.getNroMaquina());
+        lblCreditoDisp.setText("Credito $:" + maquina.getCreditoDisponible());
     }
 
     private void cambiarFruta(int posicion, String fruta) {
@@ -200,8 +203,8 @@ public class VentanaJugada extends JFrame implements ActionListener {
 
         int casillas = maquina.getNroCasillas();
         int nroMaquina = maquina.getNroMaquina();
-        Maquina maquina = casino.BuscarMaquina(nroMaquina);
-        Jugada jugada = casino.Jugar(nroMaquina);
+        MaquinaView maquina = casino.ObtenerMaquina(nroMaquina);
+        JugadaView jugada = casino.Jugar(nroMaquina);
 
         String[] combinacion = jugada.getCombinacion();
         int contador = 0;
@@ -213,21 +216,26 @@ public class VentanaJugada extends JFrame implements ActionListener {
                 for (int j = i; j < casillas; j++) {
                     cambiarFruta(j, frutas[contador]);
                 }
+
                 pausa = System.currentTimeMillis() + 50;
-                while (System.currentTimeMillis() < pausa)
-                    ;
+                while (System.currentTimeMillis() < pausa) {
+                }
             }
             cambiarFruta(i, combinacion[i]);
         }
 
-        lblCreditoDisp.setText("Credito :" + maquina.getCreditoDisponible());
+        if (jugada.getPremio() > 0) {
+            JOptionPane.showMessageDialog(null, "Premio obtenido!: Ha ganado $" + jugada.getPremio());
+        }
+
+        maquina = casino.ObtenerMaquina(nroMaquina);
+        lblCreditoDisp.setText("Credito $:" + maquina.getCreditoDisponible());
 
         return false;
     }
 
     private void Volver() {
         dispose();
-        VentanaPrincipal ventanaPrincip = new VentanaPrincipal(casino);
-        ventanaPrincip.setVisible(true);
+        ventanaPrincipal = new VentanaPrincipal(casino);
     }
 }

@@ -18,17 +18,16 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import controller.Casino;
-import modelo.Maquina;
 import modelo.TableModelMaquina;
+import view.MaquinaView;
 
-import java.util.Collection;
 import java.util.ArrayList;
 
 public class VentanaMaquinas extends JFrame implements ActionListener {
 
     private VentanaPrincipal ventanaPrincipal;
     private Container contenedor;
-    private Maquina maquina;
+    private MaquinaView maquina;
     private int maquinaSeleccionada;
     private Casino casino;
 
@@ -141,15 +140,14 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
                 "Costo"
         };
 
-        Collection<Maquina> maquinas = casino.getMaquinas();
-        ArrayList<Maquina> arrayMaquinas = new ArrayList<>(maquinas);
+        ArrayList<MaquinaView> arrayMaquinas = new ArrayList<>(casino.getMaquinas());
 
         TableModelMaquina tableModel = new TableModelMaquina();
         tableModel.addElement(maquina);
-        Object[][] data = new Object[maquinas.size()][columnNames.length];
+        Object[][] data = new Object[arrayMaquinas.size()][columnNames.length];
 
         for (int i = 0; i < arrayMaquinas.size(); i++) {
-            Maquina maquina = arrayMaquinas.get(i);
+            maquina = arrayMaquinas.get(i);
 
             data[i][0] = maquina.getNroMaquina();
             data[i][1] = maquina.getNroCasillas();
@@ -170,7 +168,7 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 1) {
                     maquinaSeleccionada = (int) table.getValueAt(table.getSelectedRow(), 0);
-                    maquina = casino.BuscarMaquina(maquinaSeleccionada);
+                    maquina = casino.ObtenerMaquina(maquinaSeleccionada);
 
                     Component configComp = EncontrarComponentePorNombre("btnPremios");
                     configComp.setEnabled(true);
@@ -194,11 +192,11 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
 
     private void MostrarCrearMaquina(int numeroMaquina) {
         dispose();
-        Maquina maquina = null;
+        MaquinaView maquina = null;
         VentanaCrearMaquina crearMaquina;
 
         if (numeroMaquina > 0) {
-            maquina = casino.BuscarMaquina(numeroMaquina);
+            maquina = casino.ObtenerMaquina(numeroMaquina);
         }
 
         if (maquina != null) {
@@ -228,7 +226,7 @@ public class VentanaMaquinas extends JFrame implements ActionListener {
 
     private void Volver() {
         dispose();
-        VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(casino);
+        ventanaPrincipal = new VentanaPrincipal(casino);
         ventanaPrincipal.setVisible(true);
     }
 

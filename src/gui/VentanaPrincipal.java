@@ -2,24 +2,20 @@ package gui;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import controller.Casino;
-import modelo.Maquina;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collection;
 
 public class VentanaPrincipal extends JFrame implements ActionListener {
 
     private Container contenedor;
     private Casino casino;
-    private JComboBox[] comboMaquinas;
 
     /**
      * @return Casino instance

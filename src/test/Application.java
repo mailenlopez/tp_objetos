@@ -6,8 +6,8 @@ import java.util.Scanner;
 
 import controller.Casino;
 import gui.VentanaPrincipal;
-import modelo.Maquina;
 import modelo.Premio;
+import view.MaquinaView;
 
 public class Application {
 
@@ -47,7 +47,7 @@ public class Application {
         System.out.print("Ingrese el precio de la jugada: ");
         float precioJugada = scanner.nextFloat();
 
-        final Maquina maquina = casino.CrearMaquina(3, recaudacion, recaudacionMin, precioJugada);
+        final MaquinaView maquina = casino.CrearMaquina(3, recaudacion, recaudacionMin, precioJugada);
         return maquina.getNroMaquina();
     }
 
@@ -64,7 +64,7 @@ public class Application {
                 return;
             }
 
-            Maquina maquina = SeleccionarMaquina(casino, nroMaquina);
+            MaquinaView maquina = SeleccionarMaquina(casino, nroMaquina);
 
             if (maquina == null) {
                 System.out.print("El número de máquina ingresado no corresponde a una máquina existente. \n");
@@ -111,10 +111,10 @@ public class Application {
         }
     }
 
-    private static Maquina SeleccionarMaquina(Casino casino, int nroMaquina) {
-        Collection<Maquina> maquinas = casino.getMaquinas();
+    private static MaquinaView SeleccionarMaquina(Casino casino, int nroMaquina) {
+        Collection<MaquinaView> maquinas = casino.getMaquinas();
 
-        Maquina maquina = maquinas.stream()
+        MaquinaView maquina = maquinas.stream()
                 .filter(s -> s.getNroMaquina() == nroMaquina)
                 .findFirst().orElse(null);
 
@@ -138,14 +138,14 @@ public class Application {
     }
 
     private static void BajaPremio(Casino casino, Scanner scanner) {
-        Maquina maquina = SeleccionarMaquina(casino, 1);
+        MaquinaView maquina = SeleccionarMaquina(casino, 1);
         Collection<Premio> premios = maquina.getPremiosDisponibles();
         if (premios.size() > 0) {
             Premio premioAEliminar = premios.stream()
                     .findFirst()
                     .orElse(null);
 
-            maquina.DarBajaPremio(premioAEliminar.getId());
+            casino.BajaPremio(maquina.getNroMaquina(), premioAEliminar.getId());
 
             System.out.print("La siguiente combinación ha sido dada de baja de la lista de premios: \n"
                     + Arrays.toString(premioAEliminar.getCombinacionGanadora()) + "\n");

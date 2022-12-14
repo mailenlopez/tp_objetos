@@ -13,25 +13,28 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.text.PlainDocument;
 
+import controller.Casino;
 import filter.IntFilter;
-import modelo.Maquina;
-import modelo.Premio;
+import view.MaquinaView;
+import view.PremioView;
 
 public class VentanaCrearPremio extends JDialog implements ActionListener {
-    private Maquina maquina;
+    private MaquinaView maquina;
     private JLabel lblDinero;
     private JTextField txtDinero;
     private JComboBox[] comboPremios;
     private Container contenedor;
     private VentanaMaquinas ventanaMaquinas;
     private VentanaPrincipal ventanaPrincipal;
+    private Casino casino;
 
     public VentanaCrearPremio(VentanaPremios _ventanaPremios, VentanaPrincipal _ventanaPrincipal,
-            VentanaMaquinas _ventanaMaquinas, Maquina _maquina) {
+            VentanaMaquinas _ventanaMaquinas, MaquinaView _maquina) {
         super(_ventanaPremios, true);
         maquina = _maquina;
         ventanaMaquinas = _ventanaMaquinas;
         ventanaPrincipal = _ventanaPrincipal;
+        casino = _ventanaPrincipal.getCasino();
         InicializarVentana();
         InicializarComponentes();
     }
@@ -101,13 +104,13 @@ public class VentanaCrearPremio extends JDialog implements ActionListener {
             combinacion[i] = comboPremios[i].getItemAt(comboPremios[i].getSelectedIndex()).toString();
         }
 
-        Premio premioExistente = maquina.BuscarPremioPorCombinacion(combinacion);
+        PremioView premioExistente = casino.BuscarPremioPorCombinacion(maquina.getNroMaquina(), combinacion);
 
         if (premioExistente != null) {
             JOptionPane.showMessageDialog(contenedor,
                     "La combinación elegida ya cuenta con un premio en esta máquina.");
         } else {
-            maquina.CargarPremio(combinacion, Integer.valueOf(txtDinero.getText()));
+            casino.AltaPremio(maquina.getNroMaquina(), combinacion, Integer.valueOf(txtDinero.getText()));
             Volver();
         }
     }

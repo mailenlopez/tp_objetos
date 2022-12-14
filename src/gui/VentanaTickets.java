@@ -14,11 +14,10 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import controller.Casino;
-import modelo.Ticket;
+import view.TicketView;
 
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.awt.event.WindowAdapter;
 
 public class VentanaTickets extends JFrame implements ActionListener {
@@ -107,13 +106,12 @@ public class VentanaTickets extends JFrame implements ActionListener {
 
         String[] columnNames = { "Numero Ticket",
                 "Importe" };
-        Collection<Ticket> tickets = casino.getTickets();
-        ArrayList<Ticket> arrayTickets = new ArrayList<>(tickets);
+        ArrayList<TicketView> arrayTickets = new ArrayList<>(casino.getTickets());
 
-        Object[][] data = new Object[tickets.size()][columnNames.length];
+        Object[][] data = new Object[arrayTickets.size()][columnNames.length];
 
         for (int i = 0; i < arrayTickets.size(); i++) {
-            Ticket ticket = arrayTickets.get(i);
+            TicketView ticket = arrayTickets.get(i);
 
             data[i][0] = ticket.getNroTicket();
             data[i][1] = "$" + String.valueOf(ticket.getImporte());
@@ -134,7 +132,7 @@ public class VentanaTickets extends JFrame implements ActionListener {
 
     private void MostrarCrearTicket() {
         dispose();
-        VentanaCrearTicket crearTicket = new VentanaCrearTicket(ventanaPrincipal);
+        VentanaCrearTicket crearTicket = new VentanaCrearTicket(ventanaPrincipal, this);
         crearTicket.setVisible(true);
     }
 

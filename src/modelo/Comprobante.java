@@ -2,6 +2,8 @@ package modelo;
 
 import java.util.Date;
 
+import view.ComprobanteView;
+
 public class Comprobante {
 
     private int nroMaquina;
@@ -24,5 +26,9 @@ public class Comprobante {
         this.nroMaquina = nroMaquina;
         this.creditoDisponible = creditoDisponible;
         this.fechaEmision = fechaEmision;
+    }
+
+    public ComprobanteView toView() {
+        return new ComprobanteView(nroMaquina, creditoDisponible, fechaEmision);
     }
 }

@@ -15,17 +15,17 @@ import javax.swing.text.PlainDocument;
 
 import controller.Casino;
 import filter.IntFilter;
-import modelo.Maquina;
+import view.MaquinaView;
 
 public class VentanaCargarTicket extends JDialog implements ActionListener {
-    private Maquina maquina;
+    private MaquinaView maquina;
     private JLabel lblMaquinaConfig, lblNroTicket;
     private JTextField txtNroTicket;
     private JPanel jpMainPanel;
     private VentanaPrincipal ventanaPrincipal;
     private Casino casino;
 
-    public VentanaCargarTicket(VentanaJugada _ventanaJugada, VentanaPrincipal _ventanaPrincipal, Maquina _maquina) {
+    public VentanaCargarTicket(VentanaJugada _ventanaJugada, VentanaPrincipal _ventanaPrincipal, MaquinaView _maquina) {
         super(_ventanaJugada, true);
         ventanaPrincipal = _ventanaPrincipal;
         casino = _ventanaPrincipal.getCasino();
@@ -95,6 +95,7 @@ public class VentanaCargarTicket extends JDialog implements ActionListener {
         casino.CargarCreditoMaquina(
                 maquina.getNroMaquina(),
                 Integer.parseInt(txtNroTicket.getText()));
+        maquina = casino.ObtenerMaquina(maquina.getNroMaquina());
         LimpiarInputs();
     }
 

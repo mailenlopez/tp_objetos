@@ -16,7 +16,7 @@ import javax.swing.text.PlainDocument;
 
 import controller.Casino;
 import filter.IntFilter;
-import modelo.Ticket;
+import view.TicketView;
 
 public class VentanaCrearTicket extends JDialog {
     private Casino casino;
@@ -25,15 +25,15 @@ public class VentanaCrearTicket extends JDialog {
     private JPanel jpMainPanel;
     private VentanaPrincipal ventanaPrincipal;
 
-    public VentanaCrearTicket(VentanaPrincipal _ventanaPrincipal) {
-        super(_ventanaPrincipal, true);
+    public VentanaCrearTicket(VentanaPrincipal _ventanaPrincipal, VentanaTickets _ventanaTickets) {
+        super(_ventanaTickets, true);
         ventanaPrincipal = _ventanaPrincipal;
         casino = _ventanaPrincipal.getCasino();
-        IniciarlizarVentana();
+        InicializarVentana();
         InicializarComponentes();
     }
 
-    private void IniciarlizarVentana() {
+    private void InicializarVentana() {
         setResizable(false);
         setTitle("Casino Corona");
         setSize(350, 400);
@@ -71,9 +71,6 @@ public class VentanaCrearTicket extends JDialog {
 
         });
 
-        // JButton btnCancelar = new JButton("Cancelar");
-        // btnCancelar.addActionListener(this);
-
         JPanel jpForm = new JPanel();
         jpForm.setLayout(new GridLayout(5, 2, 20, 20));
 
@@ -93,7 +90,7 @@ public class VentanaCrearTicket extends JDialog {
 
     private void GuardarTicket() {
 
-        Ticket ticket = casino.GenerarTicket(Float.valueOf(txtImporte.getText()));
+        TicketView ticket = casino.GenerarTicket(Float.valueOf(txtImporte.getText()));
 
         if (ticket != null) {
             JOptionPane.showMessageDialog(jpMainPanel, "El ticket ha sido creado.");
@@ -111,7 +108,7 @@ public class VentanaCrearTicket extends JDialog {
 
     private void Volver() {
         dispose();
-        VentanaTickets crearTicket = new VentanaTickets(ventanaPrincipal);
-        crearTicket.setVisible(true);
+        VentanaTickets ventanaTickets = new VentanaTickets(ventanaPrincipal);
+        ventanaTickets.setVisible(true);
     }
 }

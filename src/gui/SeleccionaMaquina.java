@@ -4,10 +4,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 import controller.Casino;
-import modelo.Maquina;
+import view.MaquinaView;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,7 +19,7 @@ public class SeleccionaMaquina extends JDialog {
     private VentanaPrincipal ventanaPrincipal;
     private Container contenedor;
     private Casino casino;
-    private JComboBox comboMaquinas;
+    private JComboBox<String> comboMaquinas;
 
     public SeleccionaMaquina(VentanaPrincipal _ventanaPrincipal, Casino _casino) {
         super(_ventanaPrincipal, true);
@@ -60,7 +59,7 @@ public class SeleccionaMaquina extends JDialog {
                 setDefaultCloseOperation(HIDE_ON_CLOSE);
                 setVisible(false);
 
-                Maquina maquina = casino.BuscarMaquina(Integer
+                MaquinaView maquina = casino.ObtenerMaquina(Integer
                         .valueOf(comboMaquinas.getItemAt(comboMaquinas.getSelectedIndex()).toString().substring(8)));
                 VentanaJugada ventana = new VentanaJugada(ventanaPrincipal, maquina);
                 ventana.setVisible(true);
@@ -69,7 +68,7 @@ public class SeleccionaMaquina extends JDialog {
 
         });
 
-        Collection<Maquina> maquina = casino.getMaquinas();
+        Collection<MaquinaView> maquina = casino.getMaquinas();
         String[] maquinas = new String[maquina.size()];
 
         comboMaquinas = new JComboBox<String>(maquinas);

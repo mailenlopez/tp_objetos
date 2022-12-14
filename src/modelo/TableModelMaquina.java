@@ -4,13 +4,15 @@ import java.util.LinkedList;
 
 import javax.swing.table.AbstractTableModel;
 
+import view.MaquinaView;
+
 public class TableModelMaquina extends AbstractTableModel {
 
     private static final String[] columnNames = { "Id", "Casillas", "Recaudación", "Recaudación Min", "Costo" };
-    private LinkedList<Maquina> list;
+    private LinkedList<MaquinaView> list;
 
     public TableModelMaquina() {
-        list = new LinkedList<Maquina>();
+        list = new LinkedList<MaquinaView>();
     }
 
     @Override
@@ -41,7 +43,7 @@ public class TableModelMaquina extends AbstractTableModel {
         }
     }
 
-    public void addElement(Maquina e) {
+    public void addElement(MaquinaView e) {
         // Adds the element in the last position in the list
         list.add(e);
         fireTableRowsInserted(list.size() - 1, list.size() - 1);

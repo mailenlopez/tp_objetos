@@ -16,10 +16,10 @@ import javax.swing.text.PlainDocument;
 
 import controller.Casino;
 import filter.IntFilter;
-import modelo.Maquina;
+import view.MaquinaView;
 
 public class VentanaCrearMaquina extends JDialog implements ActionListener {
-    private Maquina maquina;
+    private MaquinaView maquina;
     private VentanaPrincipal ventanaPrincipal;
     private Casino casino;
     private JLabel lblNumeroCasillas, lblRecaudacion, lblRecaudacionMin, lblPrecioJugada;
@@ -34,7 +34,7 @@ public class VentanaCrearMaquina extends JDialog implements ActionListener {
         InicializarComponentes();
     }
 
-    public VentanaCrearMaquina(VentanaPrincipal _ventanaPrincipal, Maquina _maquina) {
+    public VentanaCrearMaquina(VentanaPrincipal _ventanaPrincipal, MaquinaView _maquina) {
         super(_ventanaPrincipal, true);
         maquina = _maquina;
         ventanaPrincipal = _ventanaPrincipal;
@@ -105,7 +105,7 @@ public class VentanaCrearMaquina extends JDialog implements ActionListener {
         add(jpMainPanel);
     }
 
-    private void InicializarMaquina(Maquina maquina) {
+    private void InicializarMaquina(MaquinaView maquina) {
         txtNumeroCasillas.setText(String.valueOf(maquina.getNroCasillas()));
         txtRecaudacion.setText(String.valueOf((int) maquina.getRecaudacion()));
         txtRecaudacionMin.setText(String.valueOf((int) maquina.getRecaudacionMin()));

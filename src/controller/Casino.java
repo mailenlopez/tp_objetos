@@ -5,11 +5,15 @@ import java.util.Collection;
 
 import javax.swing.JOptionPane;
 
-import modelo.Comprobante;
 import modelo.Jugada;
 import modelo.Maquina;
 import modelo.Premio;
 import modelo.Ticket;
+import view.ComprobanteView;
+import view.JugadaView;
+import view.MaquinaView;
+import view.PremioView;
+import view.TicketView;
 
 public class Casino {
 	private Collection<Maquina> maquinas;
@@ -22,12 +26,18 @@ public class Casino {
 		return singleton;
 	}
 
-	public Collection<Maquina> getMaquinas() {
-		return maquinas;
+	public Collection<MaquinaView> getMaquinas() {
+		Collection<MaquinaView> maquinasViews = new ArrayList<MaquinaView>();
+		maquinas.forEach(m -> maquinasViews.add(m.toView()));
+
+		return maquinasViews;
 	}
 
-	public Collection<Ticket> getTickets() {
-		return tickets;
+	public Collection<TicketView> getTickets() {
+		Collection<TicketView> ticketsViews = new ArrayList<TicketView>();
+		tickets.forEach(t -> ticketsViews.add(t.toView()));
+
+		return ticketsViews;
 	}
 
 	public Casino() {
@@ -36,14 +46,14 @@ public class Casino {
 		tickets = new ArrayList<Ticket>();
 	}
 
-	public Maquina CrearMaquina(int nroCasillas, float recaudacion, float recaudacionMin, float costoJugada) {
+	public MaquinaView CrearMaquina(int nroCasillas, float recaudacion, float recaudacionMin, float costoJugada) {
 		Maquina maquina = new Maquina(maquinas.size() + 1, nroCasillas, recaudacion, recaudacionMin, costoJugada);
 		maquinas.add(maquina);
 
-		return maquina;
+		return maquina.toView();
 	}
 
-	public Maquina ModificarMaquina(int nroMaquina, int nroCasillas, float recaudacion, float recaudacionMin,
+	public MaquinaView ModificarMaquina(int nroMaquina, int nroCasillas, float recaudacion, float recaudacionMin,
 			float costoJugada) {
 		// Maquina maquina = BuscarMaquina(nroMaquina);
 		Maquina maquina = maquinas.stream()
@@ -54,7 +64,7 @@ public class Casino {
 			maquina.ModificarMaquina(nroCasillas, recaudacion, recaudacionMin, costoJugada);
 		}
 
-		return maquina;
+		return maquina.toView();
 	}
 
 	public void AltaPremio(int nroMaquina, String[] combinacion, float dinero) {
@@ -79,7 +89,19 @@ public class Casino {
 		}
 	}
 
-	public Maquina BuscarMaquina(int nroMaquina) {
+	public PremioView BuscarPremioPorCombinacion(int nroMaquina, String[] combinacion) {
+		Maquina maquina = BuscarMaquina(nroMaquina);
+		if (maquina != null) {
+			Premio premio = maquina.BuscarPremioPorCombinacion(combinacion);
+			if (premio != null) {
+				return premio.toView();
+			}
+		}
+
+		return null;
+	}
+
+	private Maquina BuscarMaquina(int nroMaquina) {
 		for (Maquina m : maquinas) {
 			if (m.SoyEsaMaquina(nroMaquina)) {
 				return m;
@@ -89,28 +111,38 @@ public class Casino {
 		return null;
 	}
 
+	public MaquinaView ObtenerMaquina(int nroMaquina) {
+		Maquina maquina = BuscarMaquina(nroMaquina);
+		if (maquina != null) {
+			return maquina.toView();
+		}
+
+		return null;
+	}
+
 	public void CargarCreditoMaquina(int nroMaquina, int nroTicket) {
 		Maquina maquina = BuscarMaquina(nroMaquina);
-		String mensaje;
+		String mensaje = "";
 
 		if (maquina != null) {
 			Ticket ticket = BuscarTicket(nroTicket);
-			if (ticket != null) {
+			if (ticket != null && ticket.isActivo()) {
 				maquina.CargarCreditoDisponible(ticket.getImporte());
+				ticket.setActivo(false);
 				mensaje = "El ticket se ha cargado correctamente. Nuevo crédito disponible: $"
 						+ maquina.getCreditoDisponible();
-				System.out.print(mensaje);
-				JOptionPane.showMessageDialog(null, mensaje);
-			} else {
+			} else if (ticket == null) {
 				mensaje = "El ticket ingresado no existe.";
-				System.out.print(mensaje);
-				JOptionPane.showMessageDialog(null, mensaje);
+
+			} else if (!ticket.isActivo()) {
+				mensaje = "El ticket no se pudo cargar porque ya ha sido utilizado.";
 			}
 		} else {
 			mensaje = "La maquina ingresada no existe.";
-			System.out.print(mensaje);
-			JOptionPane.showMessageDialog(null, mensaje);
 		}
+
+		System.out.print(mensaje);
+		JOptionPane.showMessageDialog(null, mensaje);
 	}
 
 	private Ticket BuscarTicket(int nroTicket) {
@@ -123,18 +155,18 @@ public class Casino {
 		return null;
 	}
 
-	public Ticket GenerarTicket(float dinero) {
+	public TicketView GenerarTicket(float dinero) {
 		Ticket ticket = new Ticket(tickets.size() + 1, dinero);
 		tickets.add(ticket);
 
-		return ticket;
+		return ticket.toView();
 	}
 
-	public Comprobante EmitirComprobante(int nroMaquina) {
+	public ComprobanteView EmitirComprobante(int nroMaquina) {
 		Maquina maquina = BuscarMaquina(nroMaquina);
 
 		if (maquina != null) {
-			return maquina.EmitirComprobante();
+			return maquina.EmitirComprobante().toView();
 		}
 
 		String mensaje = "El número de máquina ingresado no corresponde a ningúna máquina activa existente.";
@@ -144,7 +176,7 @@ public class Casino {
 		return null;
 	}
 
-	public Jugada Jugar(int nroMaquina) {
+	public JugadaView Jugar(int nroMaquina) {
 
 		Maquina maquina = BuscarMaquina(nroMaquina);
 
@@ -153,27 +185,14 @@ public class Casino {
 		}
 
 		Jugada jugada = maquina.GenerarJugada();
+		JugadaView jugadaView = jugada.toView();
 		float premio = maquina.CalcularPremio();
 
 		if (premio > 0) {
-			JOptionPane.showMessageDialog(null, "Premio obtenido!: Ha ganado $" + premio);
+			jugadaView.setPremio(premio);
 		}
 
-		return jugada;
+		return jugadaView;
 	}
 
-	public float EsPremiado(int nroMaquina, Jugada jugada) {
-		Maquina maquina = BuscarMaquina(nroMaquina);
-
-		if (maquina != null) {
-			Premio premio = maquina.BuscarPremioPorCombinacion(jugada.getCombinacion());
-			if (premio != null) {
-				JOptionPane.showMessageDialog(null, "Premio obtenido: $" + premio.getDinero());
-				return premio.getDinero();
-			}
-		}
-
-		JOptionPane.showMessageDialog(null, "Sin premio.");
-		return 0;
-	}
 }

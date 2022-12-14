@@ -11,19 +11,21 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import controller.Casino;
-import modelo.Comprobante;
-import modelo.Maquina;
+import view.ComprobanteView;
+import view.MaquinaView;
 
 public class VentanaComprobante extends JDialog implements ActionListener {
-    private Maquina maquina;
-    private Comprobante comprobante;
+    private MaquinaView maquina;
+    private ComprobanteView comprobante;
     private JLabel lblHeader, lblMaquinaConfig, lblCredito, lblFecha;
     private JPanel jpMainPanel;
+    private VentanaPrincipal ventanaPrincipal;
     private Casino casino;
 
-    public VentanaComprobante(VentanaJugada _ventanaJugada, Casino _casino, Maquina _maquina) {
+    public VentanaComprobante(VentanaJugada _ventanaJugada, VentanaPrincipal _ventanaPrincipal, MaquinaView _maquina) {
         super(_ventanaJugada, true);
-        casino = _casino;
+        ventanaPrincipal = _ventanaPrincipal;
+        casino = _ventanaPrincipal.getCasino();
         maquina = _maquina;
 
         InicializarVentana();
@@ -70,5 +72,13 @@ public class VentanaComprobante extends JDialog implements ActionListener {
 
     private void EmitirComprobante() {
         comprobante = casino.EmitirComprobante(maquina.getNroMaquina());
+        Volver();
+    }
+
+    private void Volver() {
+        dispose();
+        maquina = casino.ObtenerMaquina(maquina.getNroMaquina());
+        VentanaJugada ventanaJugada = new VentanaJugada(ventanaPrincipal, maquina);
+        ventanaJugada.setVisible(true);
     }
 }
